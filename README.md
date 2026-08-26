@@ -7,7 +7,8 @@ install on ComfyUI-Manager, search ComfyUI-Rennart and install
 
 ## How To Use
 
-
+<details>
+  <summary>🎨 Rennart Color Palette</summary>
 **🎨 Rennart Color Palette** - Generates dynamic color palettes based on Itten's color theory (Complementary, Analogous, Triadic, Split-Complementary, Tetradic, Monochromatic) with High/Low key controls and brightness variations. Features an embedded OS/Browser gradient color picker.
 <img width="1310" height="1162" alt="2026-08-26_18-57-52" src="https://github.com/user-attachments/assets/11eef5eb-391c-4de0-a039-e88fbdf933a7" />
 
