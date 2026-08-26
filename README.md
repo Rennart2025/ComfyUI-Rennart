@@ -14,7 +14,7 @@ By selecting a single color on the picker, this node allows you to:
 - Apply Itten's Color Wheel Rules: Automatically generate classic color harmonies—complementary, triadic, analogous, tetradic, and split-complementary combinations based on the fundamentals of color science.<br>
 - Adjust Color Keys: Control the overall tonal range of your composition by building palettes in High Key (light, airy tones), Low Key (deep, dark, dramatic shades), or setting dominant key colors.<br>
 - Formulate Palettes: Output HEX codes to pass accent and base colors downstream into generation, color-grading, and styling nodes (specifically tailored for Ideogram-4 JSON prompts).<br>
-Pro Tip: You can chain multiple Rennart Color Palette nodes in sequence to construct extended, highly nuanced color palettes.<br>
+<br> <b>Pro Tip:</b> You can chain multiple Rennart Color Palette nodes in sequence to construct extended, highly nuanced color palettes.<br>
 <br>
 <img width="1310" height="1162" alt="2026-08-26_18-57-52" src="https://github.com/user-attachments/assets/11eef5eb-391c-4de0-a039-e88fbdf933a7" />
 
