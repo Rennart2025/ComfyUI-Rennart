@@ -8,7 +8,13 @@ install on ComfyUI-Manager, search ComfyUI-Rennart and install
 ## How To Use
 
 ## 🎨 Rennart Color Palette
-Generates dynamic color palettes based on Itten's color theory (Complementary, Analogous, Triadic, Split-Complementary, Tetradic, Monochromatic) with High/Low key controls and brightness variations. Features an embedded OS/Browser gradient color picker.
+An advanced node for working with professional color theory and building harmonious color schemes. Generates dynamic color palettes based on Itten's color theory (Complementary, Analogous, Triadic, Split-Complementary, Tetradic, Monochromatic) with High/Low key controls and brightness variations. Features an embedded OS/Browser gradient color picker.
+<br>
+By selecting a single color on the picker, this node allows you to:
+- Apply Itten's Color Wheel Rules: Automatically generate classic color harmonies—complementary, triadic, analogous, tetradic, and split-complementary combinations based on the fundamentals of color science.
+- Adjust Color Keys: Control the overall tonal range of your composition by building palettes in High Key (light, airy tones), Low Key (deep, dark, dramatic shades), or setting dominant key colors.
+- Formulate Palettes: Output HEX codes to pass accent and base colors downstream into generation, color-grading, and styling nodes (specifically tailored for Ideogram-4 JSON prompts).
+Pro Tip: You can chain multiple Rennart Color Palette nodes in sequence to construct extended, highly nuanced color palettes.
 <br>
 <img width="1310" height="1162" alt="2026-08-26_18-57-52" src="https://github.com/user-attachments/assets/11eef5eb-391c-4de0-a039-e88fbdf933a7" />
 
