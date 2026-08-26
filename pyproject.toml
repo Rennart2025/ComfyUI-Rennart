@@ -1,0 +1,14 @@
+[project]
+name = "ComfyUI-Rennart"
+description = "Set of custom nodes for ComfyUI"
+version = "1.0.0"
+license = { file = "LICENSE" }
+dependencies = ["torch", "pillow", "numpy"]
+
+[project.urls]
+Repository = "https://github.com/Rennart2025/ComfyUI-Rennart"
+
+[tool.comfy]
+PublisherId = "Rennart"
+DisplayName = "ComfyUI-Rennart"
+Icon = ""
