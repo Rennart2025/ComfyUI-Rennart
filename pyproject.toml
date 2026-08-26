@@ -9,6 +9,5 @@ dependencies = ["torch", "pillow", "numpy"]
 Repository = "https://github.com/Rennart2025/ComfyUI-Rennart"
 
 [tool.comfy]
-PublisherId = "Rennart"
+PublisherId = "rennart"
 DisplayName = "ComfyUI-Rennart"
-Icon = ""
