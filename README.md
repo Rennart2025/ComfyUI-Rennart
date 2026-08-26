@@ -7,10 +7,9 @@ install on ComfyUI-Manager, search ComfyUI-Rennart and install
 
 ## How To Use
 
-### 🎨 Color & Harmony
 **🎨 Rennart Color Palette** - Generates dynamic color palettes based on Itten's color theory (Complementary, Analogous, Triadic, Split-Complementary, Tetradic, Monochromatic) with High/Low key controls and brightness variations. Features an embedded OS/Browser gradient color picker.
 
-**👁️ Rennart Color Preview** - Dynamic visualizer node with an adaptive grid algorithm that neatly renders array-based hex strings onto the canvas.
+**🎨 Rennart Color Preview** - Dynamic visualizer node with an adaptive grid algorithm that neatly renders array-based hex strings onto the canvas.
 
 
 ## 📜 License
