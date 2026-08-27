@@ -1,6 +1,8 @@
-# ==============================================
-# Rennart Date String
-# ==============================================
+"""
+Rennart nodes for Comfyui
+Файл и путь: ComfyUI\custom_nodes\ComfyUI-Rennart\Rennart_Random_Number.py
+Категория: Rennart/Utils
+"""
 
 # ==============================================
 # Rennart Random Number (с округлением и выходом string)

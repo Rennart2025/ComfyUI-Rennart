@@ -1,3 +1,13 @@
+"""
+Rennart nodes for Comfyui
+Файл и путь: ComfyUI\custom_nodes\ComfyUI-Rennart\Rennart_Color_Preview.py
+Категория: 
+"""
+
+# ==============================================
+# Rennart_Color_Preview
+# ==============================================
+
 import re
 import torch
 import numpy as np

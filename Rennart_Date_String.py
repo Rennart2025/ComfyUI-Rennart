@@ -1,3 +1,9 @@
+"""
+Rennart nodes for Comfyui
+Файл и путь: ComfyUI\custom_nodes\ComfyUI-Rennart\Rennart_Date_String.py
+Категория: Rennart/Utils
+"""
+
 # ==============================================
 # Rennart Date String
 # ==============================================

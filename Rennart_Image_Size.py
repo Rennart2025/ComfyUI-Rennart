@@ -1,3 +1,9 @@
+"""
+Rennart nodes for Comfyui
+Файл и путь: ComfyUI\custom_nodes\ComfyUI-Rennart\Rennart_Image_Size.py
+Категория: Rennart/Image
+"""
+
 # ==============================================
 # Rennart Image Size (с текстовым выходом)
 # ==============================================
