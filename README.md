@@ -37,6 +37,6 @@ Dynamic visualizer node with an adaptive grid algorithm that neatly renders arra
 ## 📜 License
 MIT License. Use at your own risk without any warranties. See the [LICENSE](LICENSE) file for details
 
-Thanks to ComfyUI community for inspiration and support.  
-Special thanks to [Raykosan](https://github.com/Raykosan) and [Art-xmaster](https://github.com/Art-xmaster) for inspiration and support.
+Thanks to ComfyUI community for inspiration and support.<br>  
+Special thanks to [Raykosan](https://github.com/Raykosan) and [Art-xmaster](https://github.com/Art-xmaster) for inspiration and support.<br>
 If you like this node, don't forget to star on GitHub!  
