@@ -5,6 +5,17 @@ Set of custom nodes for ComfyUI
 
 install on ComfyUI-Manager, search ComfyUI-Rennart and install
 
+## List of nodes
+Rennart_Color_Palette
+Rennart_Color_Preview
+Rennart_Date_String
+Rennart_Gradients
+Rennart_Image_Crop
+Rennart_Image_Size
+Rennart_Load_Image
+Rennart_Offset_Image
+Rennart_Random_Number
+
 ## How To Use
 
 ## 🎨 Rennart Color Palette
