@@ -15,6 +15,7 @@ Rennart_Image_Crop<br>
 Rennart_Image_Size<br>
 Rennart_Load_Image<br>
 Rennart_Offset_Image<br>
+Rennart_Video_Crossfade<br>
 Rennart_Random_Number<br>
 
 ## How To Use
