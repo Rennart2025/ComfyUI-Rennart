@@ -40,7 +40,8 @@ Pro Tip: drag any secondary marker's brightness independently and the node autom
 - Гибкий вывод: HEX-список/CSV-строка, либо готовый для вставки JSON-фрагмент "color_palette": [...] (ideogram_json) — можно сразу подставлять в промпты в стиле Ideogram.
 
 Лайфхак: двигая brightness любого вторичного маркера независимо от остальных, нода сама переключается в режим Custom — можно точечно нарушить правила гармонии для одного цвета, не теряя всю остальную настройку.
-<img width="1007" height="1348" alt="2026-09-08_05-56-06" src="https://github.com/user-attachments/assets/322ad439-a8eb-487a-bcaf-c2e139aea6ec" />
+<img width="897" height="1227" alt="2026-09-08_05-58-35" src="https://github.com/user-attachments/assets/66e50d83-5ab7-4f40-8487-a4b1dabc80a3" />
+
 
 
 ## 🎨 Rennart Color Palette
