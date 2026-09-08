@@ -40,6 +40,8 @@ Pro Tip: drag any secondary marker's brightness independently and the node autom
 - Гибкий вывод: HEX-список/CSV-строка, либо готовый для вставки JSON-фрагмент "color_palette": [...] (ideogram_json) — можно сразу подставлять в промпты в стиле Ideogram.
 
 Лайфхак: двигая brightness любого вторичного маркера независимо от остальных, нода сама переключается в режим Custom — можно точечно нарушить правила гармонии для одного цвета, не теряя всю остальную настройку.
+<img width="1007" height="1348" alt="2026-09-08_05-56-06" src="https://github.com/user-attachments/assets/322ad439-a8eb-487a-bcaf-c2e139aea6ec" />
+
 
 ## 🎨 Rennart Color Palette
 An advanced node for working with professional color theory and building harmonious color schemes. Generates dynamic color palettes based on Itten's color theory (Complementary, Analogous, Triadic, Split-Complementary, Tetradic, Monochromatic) with High/Low key controls and brightness variations. Features an embedded OS/Browser gradient color picker.
