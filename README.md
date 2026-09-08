@@ -73,7 +73,7 @@ Dynamic visualizer node with an adaptive grid algorithm that neatly renders arra
 MIT License. Use at your own risk without any warranties. See the [LICENSE](LICENSE) file for details
 
 ## 📜 Thanks
-Some nodes in this package were copied, forked or refined from [WAS Node Suite](https://github.com/WASasquatch/was-node-suite-comfyui/)
+Some nodes in this package were copied, forked or refined from [WAS Node Suite](https://github.com/WASasquatch/was-node-suite-comfyui/)<br>
 Thanks to ComfyUI community for inspiration and support.<br>  
 Special thanks to [Raykosan](https://github.com/Raykosan) and [Art-xmaster](https://github.com/Art-xmaster) for inspiration and support.<br>
 If you like this node, don't forget to star on GitHub!  
