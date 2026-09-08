@@ -6,6 +6,7 @@ Set of custom nodes for ComfyUI
 install on ComfyUI-Manager, search ComfyUI-Rennart and install
 
 ## List of nodes
+Rennart_Art_Color_Wheel<br>
 Rennart_Color_Palette<br>
 Rennart_Color_Preview<br>
 Rennart_Date_String<br>
