@@ -59,6 +59,7 @@ MIT License. Use at your own risk without any warranties. See the [LICENSE](LICE
 Some nodes and utils in this package were copied, forked, refined or remastered from:<br>
 [WAS Node Suite](https://github.com/WASasquatch/was-node-suite-comfyui/)<br>
 [ComfyUI-Ideogram-Palette-and-Prompt-Tools](https://github.com/SurrealByDesign/ComfyUI-Ideogram-Palette-and-Prompt-Tools)<br>
+
 Thanks to ComfyUI community for inspiration and support.<br>
 Special thanks to [Raykosan](https://github.com/Raykosan) and [Art-xmaster](https://github.com/Art-xmaster) for inspiration and support.<br>
 If you like this node, don't forget to star on GitHub!  
