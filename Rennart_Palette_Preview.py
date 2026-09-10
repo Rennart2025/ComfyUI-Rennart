@@ -6,7 +6,7 @@ a horizontal swatch strip with HEX labels underneath — identical in format to
 the preview produced by IdeogramPaletteExtractor.
 
 Файл и путь: ComfyUI/custom_nodes/ComfyUI-Rennart/Rennart_Palette_Preview.py
-Категория: Rennart
+Категория: Rennart/Color
 """
 
 import json
@@ -86,7 +86,7 @@ class RennartPalettePreview:
     RETURN_TYPES = ("IMAGE", "INT")
     RETURN_NAMES = ("IMAGE", "COLOR_COUNT")
     FUNCTION = "render_preview"
-    CATEGORY = "Rennart"
+    CATEGORY = "Rennart/Color"
 
     def render_preview(self, hex_string, swatch_size, show_labels=True):
         colors = _parse_input(hex_string)
