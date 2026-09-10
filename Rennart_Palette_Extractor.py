@@ -1,15 +1,12 @@
-"""Rennart Palette Extractor node for ComfyUI.
-
-Extracts a perceptually distinct color palette from an image via k-means
-clustering, deduplicated using Delta-E distance in LAB space, and returns
-the result as a JSON hex array plus a swatch preview image.
-
-Port of Ideogram's IdeogramPaletteExtractor, adapted for the Rennart package:
-uses the local `utils/color_palette_extract.py` and `utils/color_grid_render.py`.
-
-Файл и путь: ComfyUI/custom_nodes/ComfyUI-Rennart/Rennart_Palette_Extractor.py
-Категория: Rennart
 """
+Rennart nodes for Comfyui
+Файл и путь: ComfyUI\custom_nodes\ComfyUI-Rennart\Rennart_Palette_Extractor.py
+Категория: Rennart/Color
+"""
+
+# ==============================================
+# Rennart_Palette_Extractor
+# ==============================================
 
 import json
 
@@ -46,7 +43,11 @@ class RennartPaletteExtractor:
         min_delta_e: minimum perceptual (LAB) distance required between kept colors.
 
     Outputs:
-        palette_json: JSON array of hex strings, dominant color first.
+        palette_json: JSON fragment of the form
+            "color_palette": ["#RRGGBB", ...]
+            (no surrounding braces), dominant color first. Designed to be spliced
+            directly into a larger prompt JSON object by an LLM or a prompt
+            assembler node without extra wrapping.
         palette_preview: horizontal swatch strip IMAGE of the extracted colors.
         color_count: number of colors actually returned after deduplication.
     """
@@ -56,7 +57,7 @@ class RennartPaletteExtractor:
         return {
             "required": {
                 "image": ("IMAGE",),
-                "num_colors": ("INT", {"default": 6, "min": 2, "max": 16}),
+                "num_colors": ("INT", {"default": 8, "min": 2, "max": 16}),
                 "min_delta_e": ("FLOAT", {"default": 10.0, "min": 0.0, "max": 100.0, "step": 0.5}),
             }
         }
@@ -64,7 +65,7 @@ class RennartPaletteExtractor:
     RETURN_TYPES = ("STRING", "IMAGE", "INT")
     RETURN_NAMES = ("palette_json", "palette_preview", "color_count")
     FUNCTION = "extract"
-    CATEGORY = "Rennart"
+    CATEGORY = "Rennart/Color"
 
     def extract(self, image, num_colors, min_delta_e):
         try:
@@ -75,7 +76,11 @@ class RennartPaletteExtractor:
         except Exception:
             hex_colors = [FALLBACK_HEX]
 
-        palette_json = json.dumps(hex_colors)
+        # Emit a bare JSON key/value fragment: "color_palette": ["#RRGGBB", ...]
+        # No surrounding braces, so it can be dropped straight into a larger
+        # prompt JSON object without the LLM having to strip or add anything.
+        palette_json = '"color_palette": ' + json.dumps(hex_colors)
+
         swatch = render_swatch_strip(hex_colors)
         preview_tensor = torch.from_numpy(swatch).unsqueeze(0)
 
