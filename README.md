@@ -77,3 +77,6 @@ Some nodes in this package were copied, forked or refined from [WAS Node Suite](
 Thanks to ComfyUI community for inspiration and support.<br>  
 Special thanks to [Raykosan](https://github.com/Raykosan) and [Art-xmaster](https://github.com/Art-xmaster) for inspiration and support.<br>
 If you like this node, don't forget to star on GitHub!  
+
+## 📧 Contact
+https://t.me/rinatmaksutov
