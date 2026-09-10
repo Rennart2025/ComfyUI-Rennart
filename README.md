@@ -45,24 +45,7 @@ Pro Tip: drag any secondary marker's brightness independently and the node autom
 
 
 
-## 🎨 Rennart Color Palette
-An advanced node for working with professional color theory and building harmonious color schemes. Generates dynamic color palettes based on Itten's color theory (Complementary, Analogous, Triadic, Split-Complementary, Tetradic, Monochromatic) with High/Low key controls and brightness variations. Features an embedded OS/Browser gradient color picker.
-<br>
-By selecting a single color on the picker, this node allows you to:
-- Apply Itten's Color Wheel Rules: Automatically generate classic color harmonies—complementary, triadic, analogous, tetradic, and split-complementary combinations based on the fundamentals of color science.<br>
-- Adjust Color Keys: Control the overall tonal range of your composition by building palettes in High Key (light, airy tones), Low Key (deep, dark, dramatic shades), or setting dominant key colors.<br>
-- Formulate Palettes: Output HEX codes to pass accent and base colors downstream into generation, color-grading, and styling nodes (specifically tailored for Ideogram-4 JSON prompts).<br>
-<br> <b>Pro Tip:</b> You can chain multiple Rennart Color Palette nodes in sequence to construct extended, highly nuanced color palettes.<br>
-<br>
-Продвинутая нода для работы с профессиональной колористикой и построения гармоничных цветовых схем.
-<br>
-Указав один цвет на панели выбора, нода позволяет:<br>
-- Работать по Цветовому кругу Иттена: автоматически генерировать классические гармонии — комплементарные, триады, аналоговые, тетрады и split-комплементарные сочетания на основе законов цветоведения.<br>
-- Настраивать ключи (Color Keys): управлять  тональностью изображения, выстраивая палитры в высоком ключе (High Key — светлые, воздушные тона), низком ключе (Low Key — глубокие, тёмные, драматичные оттенки) или задавать ключевые доминантные цвета.<br>
-- Формировать палитры: отдавать HEX-коды для дальнейшей передачи акцентных и базовых цветов в ноды генерации, тонирования и стилизации (в частности, для JSON-промптов Ideogram-4).<br>
 
-Лайфхак - ноды Rennart Color Palette можно ставить одна за другой, получая расширенные палитры.
-<img width="1310" height="1162" alt="2026-08-26_18-57-52" src="https://github.com/user-attachments/assets/11eef5eb-391c-4de0-a039-e88fbdf933a7" />
 
 ## 🎨 Rennart Color Preview
 Dynamic visualizer node with an adaptive grid algorithm that neatly renders array-based hex strings onto the canvas.
