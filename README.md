@@ -56,7 +56,9 @@ Dynamic visualizer node with an adaptive grid algorithm that neatly renders arra
 MIT License. Use at your own risk without any warranties. See the [LICENSE](LICENSE) file for details
 
 ## ✌️ Thanks
-Some nodes in this package were copied, forked or refined from [WAS Node Suite](https://github.com/WASasquatch/was-node-suite-comfyui/)<br>
+Some nodes and utils in this package were copied, forked, refined or remastered from:
+[WAS Node Suite](https://github.com/WASasquatch/was-node-suite-comfyui/)<br>
+[ComfyUI-Ideogram-Palette-and-Prompt-Tools](https://github.com/SurrealByDesign/ComfyUI-Ideogram-Palette-and-Prompt-Tools)<br>
 Thanks to ComfyUI community for inspiration and support.<br>  
 Special thanks to [Raykosan](https://github.com/Raykosan) and [Art-xmaster](https://github.com/Art-xmaster) for inspiration and support.<br>
 If you like this node, don't forget to star on GitHub!  
