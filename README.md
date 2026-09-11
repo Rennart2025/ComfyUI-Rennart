@@ -117,6 +117,34 @@ Dynamic visualizer node with an adaptive grid algorithm that neatly renders arra
 <img width="889" height="659" alt="2026-08-26_18-53-07" src="https://github.com/user-attachments/assets/a7add16b-b49b-4e8d-89fe-e2aa85b4f750" />
 </details>
 
+<details>
+<summary> 📅 Rennart Date String </summary>
+
+## 📅 Rennart Date String
+
+Нода **Rennart Date String** возвращает текущую дату и время в виде строки, отформатированной по заданному шаблону. Поддерживает стандартные директивы `strftime` (например, `%Y-%m-%d`, `%H:%M:%S`). Нода автоматически помечается как изменённая при каждом запуске workflow, что гарантирует получение актуального значения времени.
+
+**Входы:**
+- `format` (STRING) — строка формата даты/времени, по умолчанию `%Y-%m-%d`.
+
+**Выходы:**
+- `date_string` (STRING) — отформатированная строка с текущей датой и временем.
+
+**Категория:** `Rennart/Utils`
+
+---
+
+The **Rennart Date String** node outputs the current date and time as a string formatted according to a user-defined template. It supports standard `strftime` directives (e.g. `%Y-%m-%d`, `%H:%M:%S`). The node is automatically marked as changed on every workflow run, ensuring an up-to-date timestamp is always returned.
+
+**Inputs:**
+- `format` (STRING) — date/time format string, default is `%Y-%m-%d`.
+
+**Outputs:**
+- `date_string` (STRING) — formatted string containing the current date and time.
+
+**Category:** `Rennart/Utils`
+</details>
+
 ## 📜 License
 MIT License. Use at your own risk without any warranties. See the [LICENSE](LICENSE) file for details
 
