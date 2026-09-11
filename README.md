@@ -62,16 +62,16 @@ All methods share the same inputs and end with the same LAB Delta-E deduplicatio
 
 Inputs
 
-<b>image</b> — reference IMAGE (first frame of a batch is used)
-num_colors — target palette size (2–16)
-min_delta_e — minimum perceptual distance between kept colors
-method — extraction strategy (see table above)
+`image` — reference IMAGE (first frame of a batch is used)
+`num_colors` — target palette size (2–16)
+`min_delta_e` — minimum perceptual distance between kept colors
+`method` — extraction strategy (see table above)
 
 Outputs
 
-palette_json — bare JSON fragment "color_palette": ["#RRGGBB", ...], dominant color first, ready to drop into a larger prompt JSON
-palette_preview — horizontal swatch strip IMAGE
-color_count — number of colors actually returned after deduplication
+`palette_json` — bare JSON fragment "color_palette": ["#RRGGBB", ...], dominant color first, ready to drop into a larger prompt JSON
+`palette_preview` — horizontal swatch strip IMAGE
+`color_count` — number of colors actually returned after deduplication
 
 Category: Rennart/Color
 
@@ -91,16 +91,16 @@ Category: Rennart/Color
 
 Входы
 
-image — референсное IMAGE (используется первый кадр батча)
-num_colors — целевой размер палитры (2–16)
-min_delta_e — минимальное перцептивное расстояние между оставляемыми цветами
-method — стратегия извлечения (см. таблицу)
+`image` — референсное IMAGE (используется первый кадр батча)
+`num_colors` — целевой размер палитры (2–16)
+`min_delta_e` — минимальное перцептивное расстояние между оставляемыми цветами
+`method` — стратегия извлечения (см. таблицу)
 
 Выходы
 
-palette_json — голый JSON-фрагмент "color_palette": ["#RRGGBB", ...], доминирующий цвет первым, готов к вставке в большой JSON промпта
-palette_preview — горизонтальная полоса свотчей в виде IMAGE
-color_count — сколько цветов реально вернулось после дедупликации
+`palette_json` — голый JSON-фрагмент "color_palette": ["#RRGGBB", ...], доминирующий цвет первым, готов к вставке в большой JSON промпта
+`palette_preview` — горизонтальная полоса свотчей в виде IMAGE
+`color_count` — сколько цветов реально вернулось после дедупликации
 
 Категория: Rennart/Color
 
