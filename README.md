@@ -147,6 +147,44 @@ The **Rennart Date String** node outputs the current date and time as a string f
 **Category:** `Rennart/Utils`
 </details>
 
+<details>
+<summary> 📐 Rennart Image Size </summary>
+
+## 📐 Rennart Image Size
+
+Нода **Rennart Image Size** возвращает размеры входного изображения (ширину и высоту), а также вычисляет длинную и короткую стороны. Дополнительно выдаёт текстовую строку с информацией о размерах. Изображение проходит через ноду без изменений.
+
+**Входы:**
+- `image` (IMAGE) — входное изображение.
+
+**Выходы:**
+- `image` (IMAGE) — исходное изображение без изменений.
+- `width` (INT) — ширина изображения в пикселях.
+- `height` (INT) — высота изображения в пикселях.
+- `longest_side` (INT) — длина наибольшей стороны (`max(width, height)`).
+- `shortest_side` (INT) — длина наименьшей стороны (`min(width, height)`).
+- `info` (STRING) — строка с информацией, например `Width: 1024, Height: 768`.
+
+**Категория:** `Rennart/Image`
+
+---
+
+The **Rennart Image Size** node returns the dimensions of the input image (width and height) and computes its longest and shortest sides. It also provides a text string with size information. The image itself passes through the node unchanged.
+
+**Inputs:**
+- `image` (IMAGE) — input image.
+
+**Outputs:**
+- `image` (IMAGE) — the original image, unchanged.
+- `width` (INT) — image width in pixels.
+- `height` (INT) — image height in pixels.
+- `longest_side` (INT) — length of the longest side (`max(width, height)`).
+- `shortest_side` (INT) — length of the shortest side (`min(width, height)`).
+- `info` (STRING) — info string, e.g. `Width: 1024, Height: 768`.
+
+**Category:** `Rennart/Image`
+</details>
+
 ## 📜 License
 MIT License. Use at your own risk without any warranties. See the [LICENSE](LICENSE) file for details
 
