@@ -185,6 +185,42 @@ The **Rennart Image Size** node returns the dimensions of the input image (width
 **Category:** `Rennart/Image`
 </details>
 
+<details>
+<summary> 🖼️ Rennart Load Image </summary>
+
+## 🖼️ Rennart Load Image
+
+Нода **Rennart Load Image** загружает изображение из входной папки ComfyUI и возвращает его тензор, маску (если есть альфа-канал или прозрачность), а также ширину, высоту и имя файла без расширения. Поддерживает многостраничные изображения (анимации), извлекая все кадры с одинаковыми размерами, и корректно обрабатывает EXIF-ориентацию.
+
+**Входы:**
+- `image` (IMAGE) — выбор изображения из списка файлов во входной директории (с возможностью загрузки через интерфейс).
+
+**Выходы:**
+- `image` (IMAGE) — загруженное изображение (или батч кадров для анимаций).
+- `mask` (MASK) — маска на основе альфа-канала или прозрачности; если их нет — нулевая маска по размеру изображения.
+- `width` (INT) — ширина изображения в пикселях.
+- `height` (INT) — высота изображения в пикселях.
+- `filename` (STRING) — имя файла без расширения.
+
+**Категория:** `Rennart/Image`
+
+---
+
+The **Rennart Load Image** node loads an image from the ComfyUI input folder and returns its tensor, a mask (if an alpha channel or transparency is present), as well as its width, height, and filename without extension. It supports multi-frame images (animations) by extracting all frames of equal size, and correctly handles EXIF orientation.
+
+**Inputs:**
+- `image` (IMAGE) — image selected from the list of files in the input directory (with an upload option in the UI).
+
+**Outputs:**
+- `image` (IMAGE) — the loaded image (or a batch of frames for animations).
+- `mask` (MASK) — mask derived from the alpha channel or transparency; a zero mask sized to the image if neither is present.
+- `width` (INT) — image width in pixels.
+- `height` (INT) — image height in pixels.
+- `filename` (STRING) — filename without extension.
+
+**Category:** `Rennart/Image`
+</details>
+
 ## 📜 License
 MIT License. Use at your own risk without any warranties. See the [LICENSE](LICENSE) file for details
 
