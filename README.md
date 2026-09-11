@@ -253,6 +253,52 @@ The **Rennart Offset Image** node performs a cyclic shift of the image horizonta
 **Category:** `Rennart/Image`
 </details>
 
+<details>
+<summary> 🎲 Rennart Random Number </summary>
+
+## 🎲 Rennart Random Number
+
+Нода **Rennart Random Number** генерирует случайное число заданного типа (целое, дробное или булево) в указанном диапазоне с использованием seed для воспроизводимости. Поддерживает опциональное округление до кратного значения (например, 1, 5, 10, 16, 64). Возвращает результат сразу в нескольких форматах: INT, FLOAT, NUMBER, STRING и сам seed.
+
+**Входы:**
+- `number_type` — тип генерируемого числа: `integer`, `float` или `bool` (по умолчанию `integer`).
+- `minimum` (FLOAT) — минимальное значение диапазона, по умолчанию `0`.
+- `maximum` (FLOAT) — максимальное значение диапазона, по умолчанию `100`.
+- `enable_rounding` (BOOLEAN) — включить округление числа, по умолчанию `False`.
+- `round_to` (INT) — шаг округления (1, 5, 10, 16, 64 и т.д.), по умолчанию `1`.
+- `seed` (INT) — seed генератора случайных чисел для воспроизводимости, по умолчанию `0`.
+
+**Выходы:**
+- `int` (INT) — результат в виде целого числа.
+- `float` (FLOAT) — результат в виде дробного числа.
+- `number` (NUMBER) — результат в исходном типе (INT или FLOAT).
+- `string` (STRING) — строковое представление результата.
+- `seed` (INT) — использованный seed.
+
+**Категория:** `Rennart/Utils`
+
+---
+
+The **Rennart Random Number** node generates a random number of a chosen type (integer, float, or bool) within a specified range, using a seed for reproducibility. It optionally supports rounding to a multiple (e.g. 1, 5, 10, 16, 64). The result is returned in several formats at once: INT, FLOAT, NUMBER, STRING, along with the seed used.
+
+**Inputs:**
+- `number_type` — type of the generated number: `integer`, `float`, or `bool` (default `integer`).
+- `minimum` (FLOAT) — minimum of the range, default `0`.
+- `maximum` (FLOAT) — maximum of the range, default `100`.
+- `enable_rounding` (BOOLEAN) — enable number rounding, default `False`.
+- `round_to` (INT) — rounding step (1, 5, 10, 16, 64, etc.), default `1`.
+- `seed` (INT) — random generator seed for reproducibility, default `0`.
+
+**Outputs:**
+- `int` (INT) — result as an integer.
+- `float` (FLOAT) — result as a float.
+- `number` (NUMBER) — result in its original type (INT or FLOAT).
+- `string` (STRING) — string representation of the result.
+- `seed` (INT) — the seed used.
+
+**Category:** `Rennart/Utils`
+</details>
+
 ## 📜 License
 MIT License. Use at your own risk without any warranties. See the [LICENSE](LICENSE) file for details
 
