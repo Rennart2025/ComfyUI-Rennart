@@ -51,11 +51,12 @@ Extracts a dominant color palette from a reference image and returns it as a JSO
 Five extraction strategies are available from a single dropdown, so you can pick the one that fits the image — from strict dominant-color extraction to aggressive rare-accent detection:
 
 |Method	|What it does	|Best for
-K-Means (Original)	Plain sklearn KMeans, clusters ordered by population	General-purpose, balanced palettes
-Weighted Frequency	KMeans with per-pixel weights that favour rare colors	Small bright accents on busy backgrounds
-Farthest Point Sampling	Greedily picks the most different colors	Maximally diverse palettes
-Two-Pass Background + Accent	KMeans for the background, then a second pass over the worst-explained pixels	Landscapes and cityscapes with one strong accent
-Hue Peaks (HSB)	Peaks in a saturation-weighted hue histogram, ranked by sharpness	Images with distinct saturated hues
+|---|---|---|
+|K-Means (Original)	|Plain sklearn KMeans, clusters ordered by population	|General-purpose, balanced palettes
+|Weighted Frequency	|KMeans with per-pixel weights that favour rare colors	|Small bright accents on busy backgrounds
+|Farthest Point Sampling	|Greedily picks the most different colors	|Maximally diverse palettes
+|Two-Pass Background + Accent	|KMeans for the background, then a second pass over the worst-explained pixels	|Landscapes and cityscapes with one strong accent
+|Hue Peaks (HSB)	|Peaks in a saturation-weighted hue histogram, ranked by sharpness	|Images with distinct saturated hues
 All methods share the same inputs and end with the same LAB Delta-E deduplication, so switching methods is a fair comparison.
 
 Inputs
