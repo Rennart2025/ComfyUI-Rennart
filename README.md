@@ -221,6 +221,38 @@ The **Rennart Load Image** node loads an image from the ComfyUI input folder and
 **Category:** `Rennart/Image`
 </details>
 
+<details>
+<summary> 🔄 Rennart Offset Image </summary>
+
+## 🔄 Rennart Offset Image
+
+Нода **Rennart Offset Image** выполняет циклический сдвиг изображения по горизонтали и вертикали на заданный процент от ширины и высоты. Пиксели, выходящие за границу, «заворачиваются» на противоположную сторону (torch.roll). Полезно для бесшовных текстур, тайлинга и создания смещённых копий.
+
+**Входы:**
+- `pixels` (IMAGE) — входное изображение (батч).
+- `x_percent` (FLOAT) — горизонтальный сдвиг в процентах от ширины (0–100), по умолчанию `50.0`.
+- `y_percent` (FLOAT) — вертикальный сдвиг в процентах от высоты (0–100), по умолчанию `50.0`.
+
+**Выходы:**
+- `image` (IMAGE) — сдвинутое изображение.
+
+**Категория:** `Rennart/Image`
+
+---
+
+The **Rennart Offset Image** node performs a cyclic shift of the image horizontally and vertically by a given percentage of its width and height. Pixels that go past the edge wrap around to the opposite side (torch.roll). Useful for seamless textures, tiling, and creating offset copies.
+
+**Inputs:**
+- `pixels` (IMAGE) — input image (batch).
+- `x_percent` (FLOAT) — horizontal shift as a percentage of width (0–100), default `50.0`.
+- `y_percent` (FLOAT) — vertical shift as a percentage of height (0–100), default `50.0`.
+
+**Outputs:**
+- `image` (IMAGE) — the shifted image.
+
+**Category:** `Rennart/Image`
+</details>
+
 ## 📜 License
 MIT License. Use at your own risk without any warranties. See the [LICENSE](LICENSE) file for details
 
