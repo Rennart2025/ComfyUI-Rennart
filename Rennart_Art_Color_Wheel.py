@@ -82,7 +82,10 @@ class RennartArtColorWheel:
             colors = self._fallback_colors(color_count)
 
         colors_csv = ", ".join(colors)
-        ideogram_json = json.dumps({"color_palette": colors}, ensure_ascii=False)
+        # Без внешних {} нарочно — пользователь подставляет эту строку внутрь
+        # своего уже готового JSON/текста, где фигурные скобки уже есть.
+        # json.dumps(colors) даёт корректно экранированный список в кавычках.
+        ideogram_json = '"color_palette": ' + json.dumps(colors, ensure_ascii=False)
         return (colors_csv, colors, ideogram_json)
 
     @staticmethod
