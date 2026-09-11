@@ -57,6 +57,7 @@ Five extraction strategies are available from a single dropdown, so you can pick
 |Farthest Point Sampling	|Greedily picks the most different colors	|Maximally diverse palettes
 |Two-Pass Background + Accent	|KMeans for the background, then a second pass over the worst-explained pixels	|Landscapes and cityscapes with one strong accent
 |Hue Peaks (HSB)	|Peaks in a saturation-weighted hue histogram, ranked by sharpness	|Images with distinct saturated hues
+
 All methods share the same inputs and end with the same LAB Delta-E deduplication, so switching methods is a fair comparison.
 
 Inputs
