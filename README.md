@@ -62,7 +62,7 @@ All methods share the same inputs and end with the same LAB Delta-E deduplicatio
 
 Inputs
 
-image — reference IMAGE (first frame of a batch is used)
+<b>image</b> — reference IMAGE (first frame of a batch is used)
 num_colors — target palette size (2–16)
 min_delta_e — minimum perceptual distance between kept colors
 method — extraction strategy (see table above)
@@ -80,6 +80,7 @@ Category: Rennart/Color
 Пять стратегий извлечения доступны из одного выпадающего списка — от строгого выделения доминирующих цветов до агрессивного поиска редких акцентов:
 
 |Метод	|Что делает	|Для чего лучше
+|---|---|---|
 |K-Means (Original)	|Обычный sklearn KMeans, кластеры отсортированы по численности	|Универсальный, сбалансированные палитры
 |Weighted Frequency	|KMeans с весами пикселей, отдающими приоритет редким цветам	|Мелкие яркие акценты на пёстром фоне
 |Farthest Point Sampling	|Жадно выбирает максимально разные цвета	|Максимально разнообразные палитры
