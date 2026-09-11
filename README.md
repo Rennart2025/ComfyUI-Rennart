@@ -44,6 +44,61 @@ Pro Tip: drag any secondary marker's brightness independently and the node autom
 <img width="897" height="1227" alt="2026-09-08_05-58-35" src="https://github.com/user-attachments/assets/66e50d83-5ab7-4f40-8487-a4b1dabc80a3" />
 
 
+## 🎨 Rennart Palette Extractor
+
+Extracts a dominant color palette from a reference image and returns it as a JSON fragment ready to splice into a generation prompt, plus a visual swatch strip preview.
+
+Five extraction strategies are available from a single dropdown, so you can pick the one that fits the image — from strict dominant-color extraction to aggressive rare-accent detection:
+
+Method	What it does	Best for
+K-Means (Original)	Plain sklearn KMeans, clusters ordered by population	General-purpose, balanced palettes
+Weighted Frequency	KMeans with per-pixel weights that favour rare colors	Small bright accents on busy backgrounds
+Farthest Point Sampling	Greedily picks the most different colors	Maximally diverse palettes
+Two-Pass Background + Accent	KMeans for the background, then a second pass over the worst-explained pixels	Landscapes and cityscapes with one strong accent
+Hue Peaks (HSB)	Peaks in a saturation-weighted hue histogram, ranked by sharpness	Images with distinct saturated hues
+All methods share the same inputs and end with the same LAB Delta-E deduplication, so switching methods is a fair comparison.
+
+Inputs
+
+image — reference IMAGE (first frame of a batch is used)
+num_colors — target palette size (2–16)
+min_delta_e — minimum perceptual distance between kept colors
+method — extraction strategy (see table above)
+
+Outputs
+
+palette_json — bare JSON fragment "color_palette": ["#RRGGBB", ...], dominant color first, ready to drop into a larger prompt JSON
+palette_preview — horizontal swatch strip IMAGE
+color_count — number of colors actually returned after deduplication
+
+Category: Rennart/Color
+
+Извлекает доминирующую цветовую палитру из референсного изображения и возвращает её в виде JSON-фрагмента, готового к вставке в промпт генерации, плюс визуальное превью из свотчей.
+
+Пять стратегий извлечения доступны из одного выпадающего списка — от строгого выделения доминирующих цветов до агрессивного поиска редких акцентов:
+
+Метод	Что делает	Для чего лучше
+K-Means (Original)	Обычный sklearn KMeans, кластеры отсортированы по численности	Универсальный, сбалансированные палитры
+Weighted Frequency	KMeans с весами пикселей, отдающими приоритет редким цветам	Мелкие яркие акценты на пёстром фоне
+Farthest Point Sampling	Жадно выбирает максимально разные цвета	Максимально разнообразные палитры
+Two-Pass Background + Accent	KMeans для фона, затем второй проход по худше всего объяснённым пикселям	Пейзажи и городские сцены с одним сильным акцентом
+Hue Peaks (HSB)	Пики в гистограмме hue с весом по насыщенности, ранжированные по остроте	Изображения с выраженными насыщенными оттенками
+Все методы принимают одинаковые входы и заканчиваются одной и той же дедупликацией по LAB Delta-E, поэтому переключение между методами — это честное сравнение.
+
+Входы
+
+image — референсное IMAGE (используется первый кадр батча)
+num_colors — целевой размер палитры (2–16)
+min_delta_e — минимальное перцептивное расстояние между оставляемыми цветами
+method — стратегия извлечения (см. таблицу)
+
+Выходы
+
+palette_json — голый JSON-фрагмент "color_palette": ["#RRGGBB", ...], доминирующий цвет первым, готов к вставке в большой JSON промпта
+palette_preview — горизонтальная полоса свотчей в виде IMAGE
+color_count — сколько цветов реально вернулось после дедупликации
+
+Категория: Rennart/Color
 
 
 
