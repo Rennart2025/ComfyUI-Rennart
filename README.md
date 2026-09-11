@@ -43,6 +43,7 @@ Pro Tip: drag any secondary marker's brightness independently and the node autom
 Лайфхак: двигая brightness любого вторичного маркера независимо от остальных, нода сама переключается в режим Custom — можно точечно нарушить правила гармонии для одного цвета, не теряя всю остальную настройку.
 <img width="897" height="1227" alt="2026-09-08_05-58-35" src="https://github.com/user-attachments/assets/66e50d83-5ab7-4f40-8487-a4b1dabc80a3" />
 
+<details>
 <summary>🎨 Rennart Palette Extractor </summary>
 ## 🎨 Rennart Palette Extractor
 
@@ -104,12 +105,14 @@ Category: Rennart/Color
 
 Категория: Rennart/Color
 
-
+</details>
+<details>
 <summary>🎨 Rennart Color Preview </summary>
 ## 🎨 Rennart Color Preview
 Dynamic visualizer node with an adaptive grid algorithm that neatly renders array-based hex strings onto the canvas.
 <br>
 <img width="889" height="659" alt="2026-08-26_18-53-07" src="https://github.com/user-attachments/assets/a7add16b-b49b-4e8d-89fe-e2aa85b4f750" />
+</details>
 
 ## 📜 License
 MIT License. Use at your own risk without any warranties. See the [LICENSE](LICENSE) file for details
