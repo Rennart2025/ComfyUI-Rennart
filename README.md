@@ -299,6 +299,44 @@ The **Rennart Random Number** node generates a random number of a chosen type (i
 **Category:** `Rennart/Utils`
 </details>
 
+<details>
+<summary> ✂️ Rennart Image Crop </summary>
+
+## ✂️ Rennart Image Crop
+
+Нода **Rennart Image Crop** обрезает изображение от центра так, чтобы его ширина и высота стали кратны заданному числу (например, 8, 16, 32, 64). Это полезно для подготовки изображений к моделям, требующим размеров, кратных определённому значению (VAE, апскейлеры, пайплайны SD). Дополнительно возвращает новые размеры и длины сторон.
+
+**Входы:**
+- `image` (IMAGE) — входное изображение (батч).
+- `multiple` (INT) — число, которому должны быть кратны ширина и высота после обрезки (1–512), по умолчанию `16`.
+
+**Выходы:**
+- `image` (IMAGE) — обрезанное изображение.
+- `width` (INT) — новая ширина в пикселях.
+- `height` (INT) — новая высота в пикселях.
+- `longest_side` (INT) — длина наибольшей стороны (`max(width, height)`).
+- `shortest_side` (INT) — длина наименьшей стороны (`min(width, height)`).
+
+**Категория:** `Rennart/Image`
+
+---
+
+The **Rennart Image Crop** node crops the image from the center so that its width and height become multiples of a given number (e.g. 8, 16, 32, 64). This is useful for preparing images for models that require dimensions divisible by a certain value (VAE, upscalers, SD pipelines). It also returns the new dimensions and side lengths.
+
+**Inputs:**
+- `image` (IMAGE) — input image (batch).
+- `multiple` (INT) — number that the width and height must be multiples of after cropping (1–512), default `16`.
+
+**Outputs:**
+- `image` (IMAGE) — the cropped image.
+- `width` (INT) — new width in pixels.
+- `height` (INT) — new height in pixels.
+- `longest_side` (INT) — length of the longest side (`max(width, height)`).
+- `shortest_side` (INT) — length of the shortest side (`min(width, height)`).
+
+**Category:** `Rennart/Image`
+</details>
+
 ## 📜 License
 MIT License. Use at your own risk without any warranties. See the [LICENSE](LICENSE) file for details
 
