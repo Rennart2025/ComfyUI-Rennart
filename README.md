@@ -45,6 +45,7 @@ Pro Tip: drag any secondary marker's brightness independently and the node autom
 
 <details>
 <summary>🎨 Rennart Palette Extractor </summary>
+  
 ## 🎨 Rennart Palette Extractor
 
 Extracts a dominant color palette from a reference image and returns it as a JSON fragment ready to splice into a generation prompt, plus a visual swatch strip preview.
@@ -108,7 +109,9 @@ Category: Rennart/Color
 </details>
 <details>
 <summary>🎨 Rennart Color Preview </summary>
+  
 ## 🎨 Rennart Color Preview
+  
 Dynamic visualizer node with an adaptive grid algorithm that neatly renders array-based hex strings onto the canvas.
 <br>
 <img width="889" height="659" alt="2026-08-26_18-53-07" src="https://github.com/user-attachments/assets/a7add16b-b49b-4e8d-89fe-e2aa85b4f750" />
