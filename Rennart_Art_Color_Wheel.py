@@ -6,21 +6,27 @@ class RennartArtColorWheel:
     """
     Color Harmony Wheel node.
 
-    Вся "тяжёлая" логика (рисование круга, перетаскивание маркеров,
-    подсчёт HEX по H/S/V) живёт в JS-виджете (web/js/rennart_art_color_wheel.js).
-    Python-часть только:
-      - объявляет входы (тип палитры, количество цветов, скрытое поле с
-        данными от JS-виджета);
+    Вся "тяжёлая" логика (рисование круга, перетаскивание маркеров, расчёт
+    HEX по H/S/V, механика гармонии/каскада brightness) живёт в JS-виджете
+    (web/js/rennart_art_color_wheel.js). Python-часть только:
+      - объявляет входы (тип палитры, количество цветов, два скрытых
+        текстовых поля для обмена данными с JS);
       - парсит JSON со списком HEX-цветов, который записал JS-виджет;
-      - отдаёт цвета на выход ноды.
+      - отдаёт цвета на выход ноды в нескольких форматах.
 
-    Логика "гармонии" (жёсткая связка маркеров лучами + расчёт HEX по
-    художественному RYB-кругу) полностью живёт в JS-виджете. На бэкенде она
-    не дублируется — Python лишь читает уже посчитанный список HEX.
-    Таблица уровней "эхо" (saturation/brightness для повторных цветов на
-    том же луче) в JS сейчас содержит только 2 подтверждённых уровня
-    (66/67 и 50/50) и временную экстраполяцию дальше — актуальные значения
-    можно будет просто заменить в JS, без изменений здесь.
+    Скрытые поля:
+      - wheel_data — JSON-список HEX-кодов текущей палитры (используется
+        Python для формирования выходов ноды).
+      - node_data  — JSON с полным состоянием круга (маркеры, поворот
+        пучка лучей, тип палитры, количество цветов), которое JS
+        использует, чтобы восстановить круг после перезагрузки страницы
+        или переключения вкладки ComfyUI. Python это поле не читает —
+        оно нужно только для того, чтобы round-trip'ом попасть в
+        workflow-файл через сериализацию виджетов ноды.
+
+    Оба поля скрыты от пользователя на уровне JS (widget.type = "hidden"),
+    а не через опции INPUT_TYPES — ComfyUI не имеет специального ключа
+    "hidden" внутри options словаря, поэтому здесь он не нужен.
     """
 
     PALETTE_TYPES = [
@@ -55,9 +61,9 @@ class RennartArtColorWheel:
             "required": {
                 "palette_type": (cls.PALETTE_TYPES, {"default": "Triad"}),
                 "color_count": ("INT", {"default": 3, "min": 2, "max": 10, "step": 1}),
-                # Скрытое (спрятанное JS-виджетом) текстовое поле-хранилище.
-                # JS кладёт сюда JSON-список HEX-кодов, например: ["#FF0000", "#00FFFF"]
+                # Скрытые (спрятанные JS-виджетом) текстовые поля-хранилища.
                 "wheel_data": ("STRING", {"default": "[]", "multiline": False}),
+                "node_data": ("STRING", {"default": "{}", "multiline": False}),
             }
         }
 
@@ -67,7 +73,7 @@ class RennartArtColorWheel:
     FUNCTION = "get_colors"
     CATEGORY = "Rennart/Color"
 
-    def get_colors(self, palette_type, color_count, wheel_data):
+    def get_colors(self, palette_type, color_count, wheel_data, node_data="{}"):
         min_count = self.MIN_COLORS.get(palette_type, 2)
         color_count = max(min_count, min(10, color_count))
 
@@ -84,7 +90,6 @@ class RennartArtColorWheel:
         colors_csv = ", ".join(colors)
         # Без внешних {} нарочно — пользователь подставляет эту строку внутрь
         # своего уже готового JSON/текста, где фигурные скобки уже есть.
-        # json.dumps(colors) даёт корректно экранированный список в кавычках.
         ideogram_json = '"color_palette": ' + json.dumps(colors, ensure_ascii=False)
         return (colors_csv, colors, ideogram_json)
 
@@ -114,12 +119,6 @@ class RennartArtColorWheel:
                 "#{:02X}{:02X}{:02X}".format(int(r * 255), int(g * 255), int(b * 255))
             )
         return colors
-
-    # TODO: когда придут формулы гармонии, добавить сюда (или в JS)
-    # функцию вида:
-    #   def apply_harmony(self, palette_type, root_hue) -> list[hue]
-    # которая по типу палитры и опорному (root) маркеру считает углы
-    # остальных маркеров на круге.
 
 
 NODE_CLASS_MAPPINGS = {
