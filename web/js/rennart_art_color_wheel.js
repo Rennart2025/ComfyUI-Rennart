@@ -2,6 +2,11 @@ import { app } from "../../../../scripts/app.js";
 
 const NODE_NAME = "RennartArtColorWheel";
 
+// Версия формата, который мы кладём в node_data. Если формат когда-нибудь
+// поменяется несовместимо — можно проверить эту метку при восстановлении
+// и отбросить старые данные вместо попытки их насильно распарсить.
+const STATE_SCHEMA_VERSION = 1;
+
 // Минимум цветов по типу палитры — должно совпадать с MIN_COLORS в Python.
 // Square убран (дублировал Tetradic — оба давали 4 луча через 90°).
 const MIN_COLORS = {
@@ -48,14 +53,7 @@ function echoLevelFor(generation) {
     return { s: Math.max(0.15, last.s * decay), v: Math.max(0.2, last.v * decay) };
 }
 
-// ---------- точные стартовые S/B (п.4) и таблицы "переброса" brightness (п.5) ----------
-// Формат стартов: [saturation%, brightness%] по каждому цвету (индекс = позиция, 0 = C1).
-// Формат jumpDown: значение (в %), на которое "перебрасывается" вторичный цвет
-// (индекс = позиция СРЕДИ вторичных, 0 = первый цвет после primary-лучей),
-// когда при каскаде от C1 его brightness опускается до lowThresh.
-// jumpTargetAlways — для Monochromatic, где переброс всегда идёт на 100%
-// независимо от позиции цвета.
-
+// ---------- точные стартовые S/B и таблицы "переброса" brightness ----------
 const COMPLEMENTARY_START = {
     2: [[100, 100], [100, 100]],
     3: [[100, 100], [100, 100], [66, 67]],
@@ -153,8 +151,8 @@ const TETRADIC_JUMP_DOWN = {
 };
 
 // Monochromatic: 1 луч, поэтому ВСЕ цвета кроме C1 формально "вторичные".
-// У пользователя отдельный (более низкий) порог переброса — 10%, а не 20% —
-// и цель переброса всегда 100%, независимо от позиции цвета.
+// Отдельный (более низкий) порог переброса — 10%, а не 20% — и цель
+// переброса всегда 100%, независимо от позиции цвета.
 const MONOCHROMATIC_START = {
     2: [[100, 100], [50, 50]],
     3: [[100, 100], [66, 67], [33, 33]],
@@ -295,12 +293,18 @@ function setupColorWheelWidget(node) {
     const wheelRadius = WHEEL_SIZE / 2 - MARKER_RADIUS - 2;
 
     const dataWidget = node.widgets.find((w) => w.name === "wheel_data");
+    const nodeDataWidget = node.widgets.find((w) => w.name === "node_data");
     const countWidget = node.widgets.find((w) => w.name === "color_count");
     const typeWidget = node.widgets.find((w) => w.name === "palette_type");
 
+    // Прячем оба служебных текстовых поля — ими управляет только JS.
     if (dataWidget) {
         dataWidget.type = "hidden";
         dataWidget.computeSize = () => [0, -4];
+    }
+    if (nodeDataWidget) {
+        nodeDataWidget.type = "hidden";
+        nodeDataWidget.computeSize = () => [0, -4];
     }
 
     // ---- DOM ----
@@ -358,16 +362,40 @@ function setupColorWheelWidget(node) {
         return Math.max(currentMinCount(), Math.min(10, Math.round(n)));
     }
 
-    // Переключение в Custom "на лету" (п.4.3), без сброса текущей раскладки —
-    // просто снимаем жёсткую связку, дальше каждый маркер независим.
+    // Переключение в Custom "на лету" (при независимом сдвиге вторичного
+    // цвета), без сброса текущей раскладки — просто снимаем жёсткую связку,
+    // дальше каждый маркер независим.
     function forceCustomMode() {
         if (!typeWidget || typeWidget.value === "Custom") return;
         typeWidget.value = "Custom";
         node.setDirtyCanvas(true, true);
     }
 
+    // Гарантирует, что у маркера есть все нужные поля с разумными
+    // значениями по умолчанию — на случай частично повреждённых или
+    // устаревших данных, восстановленных из node_data.
+    function sanitizeMarker(raw, fallbackRay, fallbackGen) {
+        return {
+            hue: Number.isFinite(raw?.hue) ? ((raw.hue % 1) + 1) % 1 : 0,
+            sat: Number.isFinite(raw?.sat) ? clamp01(raw.sat) : 1,
+            val: Number.isFinite(raw?.val) ? clamp01(raw.val) : 1,
+            ray: Number.isInteger(raw?.ray) ? raw.ray : fallbackRay,
+            gen: Number.isInteger(raw?.gen) ? raw.gen : fallbackGen,
+            satDir: raw?.satDir === -1 ? -1 : 1,
+        };
+    }
+
     // Пересобрать маркеры под текущий тип палитры / количество цветов.
-    function initMarkers(count) {
+    // restoreState (если передан и валиден) используется вместо генерации
+    // "с нуля" — так восстанавливается положение круга после перезагрузки
+    // страницы / переключения вкладки ComfyUI.
+    function initMarkers(count, restoreState = null) {
+        if (restoreState && Array.isArray(restoreState.markers) && restoreState.markers.length === count) {
+            markers = restoreState.markers.map((raw, i) => sanitizeMarker(raw, i, 0));
+            rootAngleFrac = Number.isFinite(restoreState.rootAngleFrac) ? restoreState.rootAngleFrac : 0;
+            return;
+        }
+
         if (isCustom()) {
             const prev = markers;
             const next = [];
@@ -402,6 +430,49 @@ function setupColorWheelWidget(node) {
         markers = next;
     }
 
+    // Читает и валидирует node_data. Возвращает null, если данных нет,
+    // они повреждены, относятся к другой схеме или явно не соответствуют
+    // сохранённым palette_type/color_count (защита от рассинхронизации,
+    // например, если workflow сохранён более старой версией ноды).
+    function loadPersistedState() {
+        if (!nodeDataWidget || !nodeDataWidget.value) return null;
+        let parsed;
+        try {
+            parsed = JSON.parse(nodeDataWidget.value);
+        } catch (e) {
+            return null;
+        }
+        if (!parsed || typeof parsed !== "object") return null;
+        if (parsed.schema !== STATE_SCHEMA_VERSION) return null;
+        if (!Array.isArray(parsed.markers) || parsed.markers.length === 0) return null;
+        if (!parsed.palette_type || !Number.isInteger(parsed.color_count)) return null;
+        if (parsed.markers.length !== parsed.color_count) return null;
+        // Тип палитры из старой версии ноды (например, удалённый "Square")
+        // больше не описан в MIN_COLORS — восстанавливать такое состояние
+        // небезопасно (лучи для него не определены), лучше начать заново.
+        if (!(parsed.palette_type in MIN_COLORS)) return null;
+        return parsed;
+    }
+
+    // Восстановить состояние из node_data, если оно есть и валидно;
+    // иначе — сгенерировать палитру заново. Используется и при первом
+    // создании ноды, и при configure() (загрузка workflow/переключение
+    // вкладки), чтобы оба пути гарантированно вели себя одинаково.
+    function restoreOrInit() {
+        const restored = loadPersistedState();
+        if (restored) {
+            // Прямое присвоение .value (без вызова .callback), чтобы не
+            // спровоцировать повторную генерацию палитры нашими же
+            // переопределёнными колбэками ниже.
+            if (typeWidget) typeWidget.value = restored.palette_type;
+            if (countWidget) countWidget.value = restored.color_count;
+            initMarkers(restored.color_count, restored);
+        } else {
+            initMarkers(clampCount(countWidget ? countWidget.value : 3));
+        }
+        refresh();
+    }
+
     // Пересчитать только углы существующих маркеров под новый rootAngleFrac.
     function reapplyRotation() {
         const offsets = rayOffsets();
@@ -410,7 +481,7 @@ function setupColorWheelWidget(node) {
         });
     }
 
-    // ---------- п.4.5: saturation C1 -> зеркальный сдвиг всех остальных, с
+    // ---------- saturation C1 -> зеркальный сдвиг всех остальных, с
     // "отскоком" от границ 0/100 для каждого маркера независимо ----------
     function applySaturationDeltaFromC1(delta) {
         markers.forEach((mm, idx) => {
@@ -431,9 +502,9 @@ function setupColorWheelWidget(node) {
         });
     }
 
-    // ---------- п.4.1/4.2/п.6: brightness C1 -> сдвиг всех остальных на ту же
+    // ---------- brightness C1/primary -> сдвиг всех остальных на ту же
     // величину; у вторичных цветов при выходе за порог — "переброс" по
-    // таблице (пока только для Complementary, см. COMPLEMENTARY_JUMP_DOWN) ----------
+    // таблице конкретного типа палитры ----------
     function applyBrightnessDeltaFromPrimary(delta) {
         const type = typeWidget?.value;
         const count = countWidget ? countWidget.value : markers.length;
@@ -458,7 +529,7 @@ function setupColorWheelWidget(node) {
                 } else if (jumpTable && jumpTable[secondaryIdx] !== undefined) {
                     mm.val = jumpTable[secondaryIdx] / 100;
                 } else {
-                    // TODO: для Analogous и любых будущих типов без таблицы —
+                    // Для Analogous и любых будущих типов без таблицы —
                     // просто клампим, ждём точных данных.
                     mm.val = clamp01(newVal);
                 }
@@ -548,9 +619,6 @@ function setupColorWheelWidget(node) {
     // Разделено на "полную пересборку DOM" (buildSwatchRows — вызывается
     // только когда меняется количество/структура цветов) и "лёгкое
     // обновление" (syncSwatchRows — вызывается на каждый тик драга/слайдера).
-    // Это важно: если пересоздавать <input type=range> прямо во время его
-    // собственного drag'а, браузер обрывает захват указателя и ползунок
-    // "залипает" после первого пикселя.
 
     function makeSliderRow(tagText, min, max, value, title) {
         const row = document.createElement("div");
@@ -717,10 +785,25 @@ function setupColorWheelWidget(node) {
         });
     }
 
+    // Записывает текущее состояние в оба скрытых виджета:
+    //  - wheel_data — плоский список HEX (то, что реально читает Python);
+    //  - node_data  — полное состояние круга, нужное только для того, чтобы
+    //    после перезагрузки страницы / переключения вкладки ComfyUI (через
+    //    onConfigure, см. ниже) восстановить именно эти маркеры, а не
+    //    перегенерировать палитру заново со стартовых таблиц.
     function syncData() {
         const hexList = markers.map((m) => markerHex(m));
         if (dataWidget) {
             dataWidget.value = JSON.stringify(hexList);
+        }
+        if (nodeDataWidget) {
+            nodeDataWidget.value = JSON.stringify({
+                schema: STATE_SCHEMA_VERSION,
+                markers,
+                rootAngleFrac,
+                palette_type: typeWidget?.value,
+                color_count: countWidget?.value,
+            });
         }
     }
 
@@ -777,15 +860,15 @@ function setupColorWheelWidget(node) {
             markers[dragIndex].hue = pointerHue;
             markers[dragIndex].sat = wheelRadius === 0 ? 0 : dist / wheelRadius;
         } else {
-            // Угол — всегда вращает весь пучок лучей разом (п.2).
+            // Угол — всегда вращает весь пучок лучей разом.
             const m = markers[dragIndex];
             const offsets = rayOffsets();
             rootAngleFrac = (pointerHue - offsets[m.ray] / 360 + 1) % 1;
             reapplyRotation();
 
             // Радиус (saturation): только C1 (индекс 0) двигает всех
-            // остальных зеркально с отскоком (п.4.5). Любой другой маркер —
-            // независимо (п.4.4).
+            // остальных зеркально с отскоком. Любой другой маркер —
+            // независимо.
             const dist = Math.min(wheelRadius, Math.hypot(dx, dy));
             const targetSat = wheelRadius === 0 ? 0 : dist / wheelRadius;
             if (dragIndex === 0) {
@@ -842,9 +925,14 @@ function setupColorWheelWidget(node) {
         };
     }
 
-    // ---- п.1: нода должна вырасти под контент DOM-виджета ----
+    // ---- нода должна вырасти под контент DOM-виджета, и не прятаться
+    // при отдалении рабочего пространства ----
     const domWidget = node.addDOMWidget("rennart_color_wheel", "custom", container, {
         serialize: false,
+        // По умолчанию ComfyUI прячет DOM-виджеты при зуме дальше scale<0.5
+        // (см. scripts/domWidget.ts, опция hideOnZoom по умолчанию true) —
+        // именно это и приводило к тому, что нода "пропадала" при отдалении.
+        hideOnZoom: false,
     });
 
     function fitNodeHeight() {
@@ -861,7 +949,26 @@ function setupColorWheelWidget(node) {
         new ResizeObserver(() => fitNodeHeight()).observe(container);
     }
 
-    // ---- init ----
-    initMarkers(clampCount(countWidget ? countWidget.value : 3));
-    refresh();
+    // ---- сохранение в workflow / восстановление после F5 или переключения
+    // вкладки ComfyUI ----
+    // configure() вызывается ComfyUI/litegraph при загрузке графа из
+    // сериализованного workflow (это происходит и при обычной загрузке
+    // workflow-файла, и при пересборке графа, которую ComfyUI делает при
+    // переключении вкладок или перезагрузке страницы). К этому моменту
+    // litegraph уже успевает присвоить значения widgets_values всем
+    // виджетам ноды — то есть nodeDataWidget.value уже содержит сохранённое
+    // состояние круга, и мы можем его прочитать и восстановить маркеры,
+    // вместо того чтобы генерировать палитру заново со стартовых таблиц.
+    const onConfigure = node.onConfigure;
+    node.onConfigure = function (info) {
+        onConfigure?.apply(this, arguments);
+        restoreOrInit();
+    };
+
+    // ---- первичная инициализация ----
+    // На случай, если сама нода создаётся не "с нуля" (а её виджеты уже
+    // почему-то содержат значения — например, при дублировании ноды),
+    // тоже пробуем восстановить состояние, а не только генерировать
+    // палитру по умолчанию.
+    restoreOrInit();
 }
