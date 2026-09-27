@@ -1,7 +1,39 @@
+r"""
+Rennart nodes for Comfyui
+Файл и путь: ComfyUI\custom_nodes\ComfyUI-Rennart\Rennart_Pixel_Drift_Fix.py
+Категория: Rennart/Image
+"""
+
 import cv2
 import numpy as np
 import torch
 from skimage.transform import PiecewiseAffineTransform, warp
+
+
+def _passthrough_edited(edited_frame, width, height):
+    """
+    Return the edited frame unchanged, but resized to the source
+    dimensions if needed, so that all frames in the output batch
+    have the same size and torch.stack() does not fail.
+
+    edited_frame:
+        [H, W, C] float32 tensor, range 0.0 - 1.0
+    """
+
+    h, w = edited_frame.shape[:2]
+
+    if h == height and w == width:
+        return edited_frame
+
+    frame_np = edited_frame.cpu().numpy()
+
+    resized = cv2.resize(
+        frame_np,
+        (width, height),
+        interpolation=cv2.INTER_LINEAR,
+    )
+
+    return torch.from_numpy(resized).float()
 
 
 class RennartPixelDriftFix:
@@ -18,12 +50,17 @@ class RennartPixelDriftFix:
 
     @classmethod
     def INPUT_TYPES(cls):
+        # NOTE:
+        # edited_image must be the FIRST IMAGE input.
+        # When the node is bypassed, ComfyUI passes the first input
+        # of a matching type straight to the output, so bypass
+        # returns the edited image (as expected), not the source.
         return {
             "required": {
-                "source_image": (
+                "edited_image": (
                     "IMAGE",
                 ),
-                "edited_image": (
+                "source_image": (
                     "IMAGE",
                 ),
                 "method": (
@@ -71,8 +108,8 @@ class RennartPixelDriftFix:
 
     def fix_pixel_drift(
         self,
-        source_image,
         edited_image,
+        source_image,
         method,
         max_mesh_points,
     ):
@@ -207,7 +244,7 @@ class RennartPixelDriftFix:
                 )
 
                 output_tensors.append(
-                    edited_image[i]
+                    _passthrough_edited(edited_image[i], width, height)
                 )
 
                 continue
@@ -254,7 +291,7 @@ class RennartPixelDriftFix:
                 )
 
                 output_tensors.append(
-                    edited_image[i]
+                    _passthrough_edited(edited_image[i], width, height)
                 )
 
                 continue
@@ -303,7 +340,7 @@ class RennartPixelDriftFix:
                 )
 
                 output_tensors.append(
-                    edited_image[i]
+                    _passthrough_edited(edited_image[i], width, height)
                 )
 
                 continue
@@ -331,7 +368,7 @@ class RennartPixelDriftFix:
                 )
 
                 output_tensors.append(
-                    edited_image[i]
+                    _passthrough_edited(edited_image[i], width, height)
                 )
 
                 continue
@@ -643,5 +680,5 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "RennartPixelDriftFix": "Rennart Pixel Drift Fix",
-}
+    "RennartPixelDriftFix": "🎯 Rennart Pixel Drift Fix",
+}
