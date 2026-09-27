@@ -1,4 +1,4 @@
-r"""
+"""
 Rennart nodes for Comfyui
 Файл и путь: ComfyUI\custom_nodes\ComfyUI-Rennart\Rennart_Pixel_Drift_Fix.py
 Категория: Rennart/Image
