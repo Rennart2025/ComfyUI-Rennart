@@ -119,6 +119,225 @@ Dynamic visualizer node with an adaptive grid algorithm that neatly renders arra
 <img width="889" height="659" alt="2026-08-26_18-53-07" src="https://github.com/user-attachments/assets/a7add16b-b49b-4e8d-89fe-e2aa85b4f750" />
 </details>
 
+
+<details>
+<summary> 🧹 Rennart Denoise </summary>
+
+## 🧹 Rennart Denoise
+
+Нода **Rennart Denoise** применяет модель шумоподавления `1xDeNoise_realplksr_otf` к изображению. Модель автоматически скачивается с Hugging Face при первом использовании, если её нет в папке `upscale_models`. Обработка выполняется двумя проходами — обычным и со сдвигом на заданное смещение, после чего результаты смешиваются 50/50. Это помогает уменьшить видимые швы и артефакты при тайлинге.
+
+**Входы:**
+- `image` (IMAGE) — входное изображение (батч).
+- `mode` — режим работы:
+  - `auto` — автоматически подбирает `tile_size=512`, `overlap=tile/4`, `offset=(tile-overlap)/2`.
+  - `tile_size` — задаётся только `tile_size`, остальные параметры вычисляются по формулам авторежима.
+  - `manual` — все параметры задаются вручную.
+- `tile_size` (INT) — размер тайла (64–4096), по умолчанию `512`.
+- `overlap` (INT) — перекрытие соседних тайлов (0–512), по умолчанию `128`.
+- `offset` (INT) — смещение для второго прохода (0–1024), по умолчанию `192`.
+
+**Выходы:**
+- `image` (IMAGE) — изображение после шумоподавления.
+
+**Категория:** `Rennart/Image`
+
+---
+
+The **Rennart Denoise** node applies the `1xDeNoise_realplksr_otf` denoising model to an image. The model is automatically downloaded from Hugging Face on first use if it is not already present in the `upscale_models` folder. Processing runs in two passes — a normal one and a shifted one — whose results are then blended 50/50. This helps reduce visible seams and artifacts when tiling.
+
+**Inputs:**
+- `image` (IMAGE) — input image (batch).
+- `mode` — operation mode:
+  - `auto` — automatically picks `tile_size=512`, `overlap=tile/4`, `offset=(tile-overlap)/2`.
+  - `tile_size` — only `tile_size` is set, the rest are derived using the auto formulas.
+  - `manual` — all parameters are set manually.
+- `tile_size` (INT) — tile size (64–4096), default `512`.
+- `overlap` (INT) — overlap between adjacent tiles (0–512), default `128`.
+- `offset` (INT) — shift for the second pass (0–1024), default `192`.
+
+**Outputs:**
+- `image` (IMAGE) — the denoised image.
+
+**Category:** `Rennart/Image`
+</details>
+
+<details>
+<summary> 🔄 Rennart Offset Image </summary>
+
+## 🔄 Rennart Offset Image
+
+Нода **Rennart Offset Image** выполняет циклический сдвиг изображения по горизонтали и вертикали. Сдвиг можно задавать двумя способами: в процентах от ширины и высоты либо в пикселях (с поддержкой отрицательных значений). Пиксели, выходящие за границу, «заворачиваются» на противоположную сторону (torch.roll). Полезно для бесшовных текстур, тайлинга и создания смещённых копий.
+
+**Входы:**
+- `pixels` (IMAGE) — входное изображение (батч).
+- `offset_mode` — режим задания сдвига: `percentage` (в процентах) или `pixels` (в пикселях), по умолчанию `percentage`.
+- `x_percent` (FLOAT) — горизонтальный сдвиг в процентах от ширины (0–100), по умолчанию `50.0` (используется в режиме `percentage`).
+- `y_percent` (FLOAT) — вертикальный сдвиг в процентах от высоты (0–100), по умолчанию `50.0` (используется в режиме `percentage`).
+- `x_pixels` (INT) — горизонтальный сдвиг в пикселях (−8192…8192), по умолчанию `0` (используется в режиме `pixels`).
+- `y_pixels` (INT) — вертикальный сдвиг в пикселях (−8192…8192), по умолчанию `0` (используется в режиме `pixels`).
+
+**Выходы:**
+- `image` (IMAGE) — сдвинутое изображение.
+
+**Категория:** `Rennart/Image`
+
+---
+
+The **Rennart Offset Image** node performs a cyclic shift of the image horizontally and vertically. The shift can be specified in two ways: as a percentage of width and height, or in pixels (including negative values). Pixels that go past the edge wrap around to the opposite side (torch.roll). Useful for seamless textures, tiling, and creating offset copies.
+
+**Inputs:**
+- `pixels` (IMAGE) — input image (batch).
+- `offset_mode` — shift mode: `percentage` or `pixels`, default `percentage`.
+- `x_percent` (FLOAT) — horizontal shift as a percentage of width (0–100), default `50.0` (used in `percentage` mode).
+- `y_percent` (FLOAT) — vertical shift as a percentage of height (0–100), default `50.0` (used in `percentage` mode).
+- `x_pixels` (INT) — horizontal shift in pixels (−8192…8192), default `0` (used in `pixels` mode).
+- `y_pixels` (INT) — vertical shift in pixels (−8192…8192), default `0` (used in `pixels` mode).
+
+**Outputs:**
+- `image` (IMAGE) — the shifted image.
+
+**Category:** `Rennart/Image`
+</details>
+
+<details>
+<summary> 🔍 Rennart Image Upscale (Model) </summary>
+
+## 🔍 Rennart Image Upscale (Model)
+
+Нода **Rennart Image Upscale (Model)** объединяет загрузку модели апскейла и само увеличение изображения в одной ноде. Модель выбирается из папки `upscale_models` ComfyUI. Обработка выполняется тайлами с настраиваемым размером и перекрытием, что позволяет работать с большими изображениями на ограниченной VRAM. При нехватке видеопамяти (OOM) нода может автоматически уменьшать размер тайла и продолжать работу.
+
+**Входы:**
+- `model_name` — имя модели апскейла из списка файлов в папке `upscale_models`.
+- `image` (IMAGE) — входное изображение (батч).
+- `tile_size` (INT) — размер тайла (плитки) в пикселях (64–4096), по умолчанию `512`. Больше — быстрее, но требует больше VRAM.
+- `overlap` (INT) — перекрытие между тайлами в пикселях (0–512), по умолчанию `32`. Помогает убрать видимые швы.
+- `auto_reduce_on_oom` (BOOLEAN) — автоматически уменьшать размер тайла при нехватке VRAM, по умолчанию `True`.
+
+**Выходы:**
+- `image` (IMAGE) — увеличенное изображение.
+
+**Категория:** `Rennart/Upscale`
+
+---
+
+The **Rennart Image Upscale (Model)** node combines upscale model loading and image upscaling into a single node. The model is selected from the ComfyUI `upscale_models` folder. Processing is performed in tiles with configurable size and overlap, allowing large images to be handled on limited VRAM. On out-of-memory (OOM) errors, the node can automatically reduce the tile size and continue.
+
+**Inputs:**
+- `model_name` — upscale model name from the list of files in the `upscale_models` folder.
+- `image` (IMAGE) — input image (batch).
+- `tile_size` (INT) — tile size in pixels (64–4096), default `512`. Larger is faster but requires more VRAM.
+- `overlap` (INT) — overlap between tiles in pixels (0–512), default `32`. Helps remove visible seams.
+- `auto_reduce_on_oom` (BOOLEAN) — automatically reduce tile size on VRAM shortage, default `True`.
+
+**Outputs:**
+- `image` (IMAGE) — the upscaled image.
+
+**Category:** `Rennart/Upscale`
+</details>
+
+<details>
+<summary> 🎵 Rennart Audio Concatenate </summary>
+
+## 🎵 Rennart Audio Concatenate
+
+Нода **Rennart Audio Concatenate** последовательно склеивает несколько аудиовходов (от 2 до 30) в один аудиопоток в порядке `audio_1 → audio_2 → audio_3 → ...`. Между склейками можно добавлять паузу заданной длительности (тишину). Все входные аудио должны иметь одинаковую частоту дискретизации и одинаковое число каналов — иначе нода выдаст ошибку с пояснением. Пауза не добавляется после последнего аудио.
+
+**Входы:**
+- `number_of_inputs` (INT) — количество аудио для склейки (2–30), по умолчанию `2`.
+- `pause_seconds` (FLOAT) — длительность паузы между склейками в секундах (0–60), по умолчанию `1.0`. `0` — без паузы.
+- `audio_1` (AUDIO) — первое аудио (обязательный).
+- `audio_2` (AUDIO) — второе аудио (обязательный).
+- `audio_3` … `audio_30` (AUDIO, опциональные) — дополнительные аудио, используются, если `number_of_inputs` больше 2.
+
+**Выходы:**
+- `audio` (AUDIO) — склеенный аудиопоток.
+
+**Категория:** `Rennart/Audio`
+
+---
+
+The **Rennart Audio Concatenate** node concatenates multiple audio inputs (from 2 to 30) into a single audio stream, in the order `audio_1 → audio_2 → audio_3 → ...`. A silence pause of a chosen duration can be inserted between the joined clips. All input audios must share the same sample rate and the same number of channels — otherwise the node raises a descriptive error. No pause is added after the last audio.
+
+**Inputs:**
+- `number_of_inputs` (INT) — number of audios to concatenate (2–30), default `2`.
+- `pause_seconds` (FLOAT) — pause duration between clips in seconds (0–60), default `1.0`. `0` means no pause.
+- `audio_1` (AUDIO) — first audio (required).
+- `audio_2` (AUDIO) — second audio (required).
+- `audio_3` … `audio_30` (AUDIO, optional) — additional audios, used when `number_of_inputs` is greater than 2.
+
+**Outputs:**
+- `audio` (AUDIO) — the concatenated audio stream.
+
+**Category:** `Rennart/Audio`
+</details>
+
+<details>
+<summary> 🎨 Rennart RGBA to RGB </summary>
+
+## 🎨 Rennart RGBA to RGB
+
+Нода **Rennart RGBA to RGB** приводит изображение к трёхканальному виду (RGB), убирая альфа-канал и корректно обрабатывая другие варианты числа каналов. Если изображение уже RGB — возвращается без изменений; если RGBA или больше 4 каналов — берутся только первые три; если один канал (grayscale) — он дублируется в три, чтобы получить RGB. Полезно для пайплайнов, куда нужно подавать только RGB-тензоры.
+
+**Входы:**
+- `image` (IMAGE) — входное изображение (батч).
+
+**Выходы:**
+- `image` (IMAGE) — изображение с тремя каналами (RGB).
+
+**Категория:** `Rennart/Image`
+
+---
+
+The **Rennart RGBA to RGB** node converts an image to a three-channel (RGB) representation by dropping the alpha channel and correctly handling other channel-count variants. If the image is already RGB, it is returned unchanged; if RGBA or more than 4 channels, only the first three are kept; if single-channel (grayscale), it is duplicated into three channels to produce RGB. Useful for pipelines that require RGB-only tensors.
+
+**Inputs:**
+- `image` (IMAGE) — input image (batch).
+
+**Outputs:**
+- `image` (IMAGE) — image with three channels (RGB).
+
+**Category:** `Rennart/Image`
+</details>
+
+<details>
+<summary> 🎯 Rennart Pixel Drift Fix </summary>
+
+## 🎯 Rennart Pixel Drift Fix
+
+Нода **Rennart Pixel Drift Fix** выравнивает отредактированное изображение обратно к геометрии исходного изображения. Это полезно, когда после внешней обработки (inpainting, img2img, ручная правка и т.п.) картинка «уехала» относительно оригинала. Алгоритм находит общие ключевые точки через SIFT, сопоставляет их методом BFMatcher, фильтрует по критерию Лоу, вычисляет гомографию через RANSAC и деформирует отредактированное изображение обратно к исходной геометрии. Доступны два режима: быстрая глобальная перспективная коррекция `flat_4_points` и экспериментальная плотная нелинейная коррекция `mesh` (кусочно-аффинное преобразование).
+
+**Входы:**
+- `edited_image` (IMAGE) — изображение после редактирования (должно быть **первым** IMAGE-входом — при bypass ComfyUI пропускает именно его на выход).
+- `source_image` (IMAGE) — исходное (эталонное) изображение, задающее целевую геометрию.
+- `method` — метод выравнивания:
+  - `flat_4_points` — быстрая глобальная перспективная коррекция (по умолчанию, даёт лучший результат).
+  - `mesh` — экспериментальная плотная нелинейная коррекция на основе кусочно-аффинного преобразования.
+- `max_mesh_points` (INT) — максимальное число точек для mesh-режима (100–10000), по умолчанию `400`. Большие значения повышают точность, но замедляют работу. Используется только при `method="mesh"`.
+
+**Выходы:**
+- `fixed_image` (IMAGE) — отредактированное изображение, приведённое к геометрии исходного.
+
+**Категория:** `Rennart/Image`
+
+---
+
+The **Rennart Pixel Drift Fix** node aligns an edited image back to the geometry of the source image. This is useful when external processing (inpainting, img2img, manual edits, etc.) has shifted the picture relative to the original. The algorithm detects shared keypoints with SIFT, matches them with BFMatcher, filters matches using Lowe's ratio test, estimates a homography with RANSAC, and warps the edited image back to the source geometry. Two modes are available: fast global perspective correction `flat_4_points` and experimental dense non-linear correction `mesh` (piecewise affine transform).
+
+**Inputs:**
+- `edited_image` (IMAGE) — the edited image (must be the **first** IMAGE input — on bypass ComfyUI passes it straight to the output).
+- `source_image` (IMAGE) — the source (reference) image that defines the target geometry.
+- `method` — alignment method:
+  - `flat_4_points` — fast global perspective correction (default, gives better results).
+  - `mesh` — experimental dense non-linear correction based on piecewise affine transform.
+- `max_mesh_points` (INT) — maximum number of points for mesh mode (100–10000), default `400`. Higher values increase accuracy but take longer. Only used when `method="mesh"`.
+
+**Outputs:**
+- `fixed_image` (IMAGE) — the edited image aligned to the source geometry.
+
+**Category:** `Rennart/Image`
+</details>
+
 <details>
 <summary> 📅 Rennart Date String </summary>
 
@@ -336,6 +555,7 @@ The **Rennart Image Crop** node crops the image from the center so that its widt
 
 **Category:** `Rennart/Image`
 </details>
+
 
 ## 📜 License
 MIT License. Use at your own risk without any warranties. See the [LICENSE](LICENSE) file for details
