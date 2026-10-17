@@ -119,6 +119,105 @@ Dynamic visualizer node with an adaptive grid algorithm that neatly renders arra
 <img width="889" height="659" alt="2026-08-26_18-53-07" src="https://github.com/user-attachments/assets/a7add16b-b49b-4e8d-89fe-e2aa85b4f750" />
 </details>
 
+<details>
+<summary>🌗 Rennart Exposure Fusion  </summary>
+
+## 🌗 Rennart Exposure Fusion
+
+Lifts dark shadows and recovers blown highlights from a single image — no masks, no neural networks, no visible halos.
+The node builds virtual exposures from the photo (brighter for shadows, darker for highlights) and blends them
+with the exposure fusion method (Mertens et al., 2007). Midtones stay untouched.
+By default only luminance L (LAB) is changed, so colors stay exactly as in the source.
+
+How it works:
+- Virtual exposures are made by an honest EV shift in linear light: `+1, +2 …` up to `shadows_ev`, `−0.5 …` down to `highlights_ev`.
+- Brighter copies are used only in the shadows of the source, darker copies only in its highlights — and only where the highlights have detail (flat sky or a white wall do not turn gray).
+- Every copy gets a weight "how close is the tone to the middle"; weights follow image edges (guided filter), so they do not leak across light/shadow borders.
+- The copies are merged with Laplacian pyramids — transitions are smooth.
+- Shadows near light sources (street lamps, headlights) are not lifted, so the glow does not swell into a bright disk.
+
+Inputs
+- `image` — source image.
+- `shadows_ev` — how much the shadows may be lifted, EV (0 — leave shadows). Default 1.0.
+- `shadows_range` — what counts as shadows: source luminance below this value (0..1, soft edge ±0.1).
+- `highlights_ev` — how much the highlights may be darkened, EV (0 — leave highlights). Default 0.5.
+- `highlights_range` — what counts as highlights: source luminance above this value.
+- `highlight_detail` — darken highlights only where there is detail; 0 — darken all highlights.
+- `mid_tone` — target tone (0.5 — middle gray).
+- `sigma` — selectivity: lower pulls harder toward `mid_tone`, higher is softer.
+- `contrast_weight` — prefer copies with higher local contrast (may amplify noise in shadows).
+- `saturation_weight` — prefer more saturated copies.
+- `halo_control` — halo suppression: guided filter + limited pyramid depth. 0 — classic fusion.
+- `protect_lights` — do not lift shadows around light sources.
+- `luminance_only` — color via LAB: change only luminance L, keep a/b from the source (also 3× faster).
+- `protect_tones` — shadows never get darker than the source, highlights never brighter.
+- `strength` — blend of the result luminance with the source.
+
+Outputs
+- `image` — result.
+- `weights_preview` — where each exposure was used: gray — source, yellow/orange — brighter copies, light blue/blue — darker copies.
+- `info` — short multi-line description of the node and the settings it ran with (connect to Show Text / Show Any).
+
+| Parameter | Typical values | Effect |
+|---|---|---|
+| `shadows_ev` | 0.5 – 2.0 | Higher — brighter shadows, more noise revealed |
+| `highlights_ev` | 0.3 – 1.5 | Higher — more detail in highlights, risk of gray whites |
+| `halo_control` | 0.3 – 0.7 | Higher — fewer halos, bright sources may slightly dim |
+
+Only numpy is required — no extra dependencies.
+The same algorithm is used in the standalone app Rennart Denoise (Exposure section).
+
+Category: Rennart/Image
+
+---
+
+Высветляет провалы в тенях и возвращает детали в пересветах по одному снимку — без масок, без нейросетей, без заметных ореолов.
+Нода строит из фотографии виртуальные экспозиции (светлее — для теней, темнее — для светов) и склеивает их
+методом слияния экспозиций (Mertens et al., 2007). Средние тона не меняются.
+По умолчанию меняется только яркость L (LAB), цвет остаётся точно как в исходнике.
+
+Как работает:
+- Виртуальные экспозиции — честный сдвиг EV в линейном свете: `+1, +2 …` до `shadows_ev`, `−0.5 …` до `highlights_ev`.
+- Светлые копии участвуют только в тенях исходника, тёмные — только в его светах, и только там, где в светах есть детали (плоское небо или белая стена не сереют).
+- Каждой копии даётся вес «насколько тон близок к середине»; веса следуют за краями изображения (guided filter) и не перетекают через границы «свет / тень».
+- Копии склеиваются пирамидами Лапласа — переходы плавные.
+- Тени рядом с источниками света (фонари, фары) не вытягиваются, чтобы свечение не раздувалось в светлый диск.
+
+Входы
+- `image` — исходное изображение.
+- `shadows_ev` — насколько можно высветлить тени, EV (0 — тени не трогать). По умолчанию 1.0.
+- `shadows_range` — что считать тенями: яркость исходника ниже этого значения (0..1, мягкая граница ±0.1).
+- `highlights_ev` — насколько можно затемнить пересветы, EV (0 — света не трогать). По умолчанию 0.5.
+- `highlights_range` — что считать светами: яркость исходника выше этого значения.
+- `highlight_detail` — затемнять света только там, где есть детали; 0 — затемнять все света.
+- `mid_tone` — к какому тону стремиться (0.5 — средне-серый).
+- `sigma` — строгость выбора: меньше — сильнее тянет к `mid_tone`, больше — мягче.
+- `contrast_weight` — предпочитать копии с бо́льшим локальным контрастом (может усилить шум в тенях).
+- `saturation_weight` — предпочитать более насыщенные копии.
+- `halo_control` — подавление ореолов: guided filter + ограничение глубины пирамиды. 0 — классическое слияние.
+- `protect_lights` — не вытягивать тени вокруг источников света.
+- `luminance_only` — цвет через LAB: менять только яркость L, цвет a/b оставить от исходника (заодно втрое быстрее).
+- `protect_tones` — тени не темнее исходника, света не ярче.
+- `strength` — смешивание яркости результата с исходником.
+
+Выходы
+- `image` — результат.
+- `weights_preview` — где какая экспозиция использована: серый — исходник, жёлтый/оранжевый — светлые копии, голубой/синий — тёмные.
+- `info` — краткое многострочное описание ноды и настроек, с которыми она отработала (подключается к Show Text / Show Any).
+
+| Параметр | Обычные значения | Действие |
+|---|---|---|
+| `shadows_ev` | 0.5 – 2.0 | Больше — светлее тени, заметнее шум |
+| `highlights_ev` | 0.3 – 1.5 | Больше — больше деталей в светах, риск посеревшего белого |
+| `halo_control` | 0.3 – 0.7 | Больше — меньше ореолов, яркие источники могут чуть потускнеть |
+
+Нужен только numpy — дополнительных зависимостей нет.
+Тот же алгоритм работает в отдельной программе Rennart Denoise (раздел Exposure).
+
+Категория: Rennart/Image
+
+</details>
+
 
 <details>
 <summary> 🧹 Rennart Denoise </summary>
