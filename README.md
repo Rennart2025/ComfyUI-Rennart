@@ -220,46 +220,96 @@ Category: Rennart/Image
 
 
 <details>
-<summary> 🧹 Rennart Denoise </summary>
+<summary>🧹 Rennart Denoise  </summary>
 
 ## 🧹 Rennart Denoise
 
-Нода **Rennart Denoise** применяет модель шумоподавления `1xDeNoise_realplksr_otf` к изображению. Модель автоматически скачивается с Hugging Face при первом использовании, если её нет в папке `upscale_models`. Обработка выполняется двумя проходами — обычным и со сдвигом на заданное смещение, после чего результаты смешиваются 50/50. Это помогает уменьшить видимые швы и артефакты при тайлинге.
+The whole Rennart denoise graph in one node — no need to build a workflow of a dozen nodes.
+Five restoration models are combined into two groups and blended in 8 bit exactly like the original workflow (LayerStyle Image Blend, LAB via Pillow).
 
-**Входы:**
-- `image` (IMAGE) — входное изображение (батч).
-- `mode` — режим работы:
-  - `auto` — автоматически подбирает `tile_size=512`, `overlap=tile/4`, `offset=(tile-overlap)/2`.
-  - `tile_size` — задаётся только `tile_size`, остальные параметры вычисляются по формулам авторежима.
-  - `manual` — все параметры задаются вручную.
-- `tile_size` (INT) — размер тайла (64–4096), по умолчанию `512`.
-- `overlap` (INT) — перекрытие соседних тайлов (0–512), по умолчанию `128`.
-- `offset` (INT) — смещение для второго прохода (0–1024), по умолчанию `192`.
+How it works:
+- **Delicate** — `SCUNet PSNR` and `SCUNet GAN`, each with the two-pass Rennart tiling (second pass shifted, 50/50 — removes tile seams). Optional **DeBlur**: luminance L from `1x_DeBLR`, color a/b from SCUNet. Then GAN ⟷ PSNR blend.
+- **Aggressive** — `RealPLKSR` (direct pass + pass on the inverted image, 50/50) and `RealESRGAN x2` scaled back to the source size (direct + inverted). Then RealPLKSR ⟷ RealESRGAN blend.
+- **Result** — Delicate ⟷ Aggressive, then `strength` (blend with the source).
+- Branches with zero weight are not computed.
+- Branch results are cached for the last image: changing sliders, `strength`, `deblur` re-blends in seconds instead of recomputing all models.
+- Models are taken from `ComfyUI/models/upscale_models`; missing ones are downloaded automatically from [huggingface.co/Rennart](https://huggingface.co/Rennart) and checked by SHA256.
 
-**Выходы:**
-- `image` (IMAGE) — изображение после шумоподавления.
+Inputs
+- `image` — source image (batch supported).
+- `strength` — overall strength: 0 — source, 100 — full result. Default 100.
+- `delicate_aggressive` — share of Aggressive over Delicate. Default 25.
+- `delicate_gan_psnr` — inside Delicate: share of SCUNet PSNR over SCUNet GAN. Default 25.
+- `aggressive_plksr_esrgan` — inside Aggressive: share of RealESRGAN over RealPLKSR. Default 25.
+- `esrgan_inverted_direct` — RealESRGAN: share of the direct pass over the inverted one. Default 50.
+- `deblur` — DeBlur for both SCUNet branches. Default on.
+- `esrgan_downscale` — filter that brings RealESRGAN x2 back to the source size: `Lanczos` (as in the graph), `Bicubic`, `Box`.
+- `tile_size` — tile of the two-pass tiling; overlap = tile/4, offset = (tile − overlap)/2. Default 512.
+- `precision` — `fp32` (exact) or `fp16` (faster, less VRAM, may differ slightly).
 
-**Категория:** `Rennart/Image`
+Outputs
+- `image` — result.
+- `delicate` — Delicate group before the final blend (black if its weight is 0).
+- `aggressive` — Aggressive group before the final blend (black if its weight is 0).
+- `info` — short instruction (connect to Show Text / Show Any).
+- `stat` — which branches were computed, which came from the cache, time per branch and total.
+
+| Model | Author | License |
+|---|---|---|
+| `scunet_color_real_psnr.pth`, `scunet_color_real_gan.pth` | Kai Zhang et al. ([KAIR](https://github.com/cszn/KAIR)) | MIT |
+| `1xDeNoise_realplksr_otf.safetensors` | Philip Hofmann (Phips) | CC-BY-4.0 |
+| `RealESRGAN_x2plus.pth` | Xintao Wang et al. ([Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN)) | BSD-3-Clause |
+| `1x_DeBLR.pth` | BlackScout ([OpenModelDB](https://openmodeldb.info/models/1x-DeBLR)) | not specified |
+
+Note: replaces the previous single-model version of this node. Old workflows with 🧹 Rennart Denoise need the node to be re-added.
+
+Category: Rennart/Image
 
 ---
 
-The **Rennart Denoise** node applies the `1xDeNoise_realplksr_otf` denoising model to an image. The model is automatically downloaded from Hugging Face on first use if it is not already present in the `upscale_models` folder. Processing runs in two passes — a normal one and a shifted one — whose results are then blended 50/50. This helps reduce visible seams and artifacts when tiling.
+Весь шумодав Rennart в одной ноде — не нужно собирать workflow из десятка нод.
+Пять моделей реставрации объединены в две группы и смешиваются в 8 бит точно как в исходном workflow (LayerStyle Image Blend, LAB через Pillow).
 
-**Inputs:**
-- `image` (IMAGE) — input image (batch).
-- `mode` — operation mode:
-  - `auto` — automatically picks `tile_size=512`, `overlap=tile/4`, `offset=(tile-overlap)/2`.
-  - `tile_size` — only `tile_size` is set, the rest are derived using the auto formulas.
-  - `manual` — all parameters are set manually.
-- `tile_size` (INT) — tile size (64–4096), default `512`.
-- `overlap` (INT) — overlap between adjacent tiles (0–512), default `128`.
-- `offset` (INT) — shift for the second pass (0–1024), default `192`.
+Как работает:
+- **Delicate** — `SCUNet PSNR` и `SCUNet GAN`, каждая с двойным проходом Rennart (второй проход со сдвигом, 50/50 — убирает швы тайлов). По желанию **DeBlur**: яркость L от `1x_DeBLR`, цвет a/b от SCUNet. Затем смешивание GAN ⟷ PSNR.
+- **Aggressive** — `RealPLKSR` (прямой проход + проход по инвертированной картинке, 50/50) и `RealESRGAN x2` с возвратом к исходному размеру (прямой + инвертированный). Затем смешивание RealPLKSR ⟷ RealESRGAN.
+- **Итог** — Delicate ⟷ Aggressive, затем `strength` (смешивание с исходником).
+- Ветки с нулевым весом не считаются.
+- Результаты веток кэшируются для последнего изображения: смена ползунков, `strength`, `deblur` пересчитывается за секунды, без повторного прогона моделей.
+- Модели берутся из `ComfyUI/models/upscale_models`; недостающие скачиваются автоматически с [huggingface.co/Rennart](https://huggingface.co/Rennart) и проверяются по SHA256.
 
-**Outputs:**
-- `image` (IMAGE) — the denoised image.
+Входы
+- `image` — исходное изображение (пакет поддерживается).
+- `strength` — общая сила: 0 — исходник, 100 — полный результат. По умолчанию 100.
+- `delicate_aggressive` — доля Aggressive поверх Delicate. По умолчанию 25.
+- `delicate_gan_psnr` — внутри Delicate: доля SCUNet PSNR поверх SCUNet GAN. По умолчанию 25.
+- `aggressive_plksr_esrgan` — внутри Aggressive: доля RealESRGAN поверх RealPLKSR. По умолчанию 25.
+- `esrgan_inverted_direct` — RealESRGAN: доля прямого прохода поверх инвертированного. По умолчанию 50.
+- `deblur` — DeBlur для обеих веток SCUNet. По умолчанию включён.
+- `esrgan_downscale` — фильтр возврата RealESRGAN x2 к исходному размеру: `Lanczos` (как в графе), `Bicubic`, `Box`.
+- `tile_size` — тайл двойного прохода; overlap = tile/4, offset = (tile − overlap)/2. По умолчанию 512.
+- `precision` — `fp32` (точно) или `fp16` (быстрее, меньше видеопамяти, результат может чуть отличаться).
 
-**Category:** `Rennart/Image`
+Выходы
+- `image` — результат.
+- `delicate` — группа Delicate до итогового смешивания (чёрная, если её вес 0).
+- `aggressive` — группа Aggressive до итогового смешивания (чёрная, если её вес 0).
+- `info` — краткая инструкция (подключается к Show Text / Show Any).
+- `stat` — какие ветки посчитаны, какие взяты из кэша, время каждой ветки и общее.
+
+| Модель | Автор | Лицензия |
+|---|---|---|
+| `scunet_color_real_psnr.pth`, `scunet_color_real_gan.pth` | Kai Zhang и др. ([KAIR](https://github.com/cszn/KAIR)) | MIT |
+| `1xDeNoise_realplksr_otf.safetensors` | Philip Hofmann (Phips) | CC-BY-4.0 |
+| `RealESRGAN_x2plus.pth` | Xintao Wang и др. ([Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN)) | BSD-3-Clause |
+| `1x_DeBLR.pth` | BlackScout ([OpenModelDB](https://openmodeldb.info/models/1x-DeBLR)) | не указана |
+
+Примечание: заменяет прежнюю версию ноды с одной моделью. В старых workflow 🧹 Rennart Denoise нужно поставить заново.
+
+Категория: Rennart/Image
+
 </details>
+
 
 <details>
 <summary> 🔄 Rennart Offset Image </summary>
