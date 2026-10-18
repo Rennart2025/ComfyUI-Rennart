@@ -360,8 +360,48 @@ Sliders (percent = share of the right side):
 Branches with zero weight are not computed. Branch results are cached for the last image:
 changing sliders, strength or deblur re-blends in seconds.
 
+Notes on models:
+  - SCUNet works poorly on flat dark surfaces.
+    Tip: raise delicate_aggressive (more Aggressive).
+  - 1xDeNoise_realplksr_otf can eat fine texture in places.
+    Tip: lower delicate_aggressive or raise aggressive_plksr_esrgan.
+  - RealESRGAN can eat fine texture in places and often adds sharpness where it is not needed.
+    Tip: lower aggressive_plksr_esrgan or delicate_aggressive.
+  - 1x_DeBLR may produce artifacts on flat surfaces.
+    Tip: turn deblur off.
+
 Outputs: image, delicate, aggressive (black if the group has zero weight), info, stat.
-Models: ComfyUI/models/upscale_models, downloaded automatically from huggingface.co/Rennart on first run."""
+Models: ComfyUI/models/upscale_models, downloaded automatically from huggingface.co/Rennart on first run.
+
+---
+
+🧹 Rennart Denoise — весь шумодав Rennart в одной ноде.
+
+Delicate   = SCUNet PSNR + SCUNet GAN (двойной проход), по желанию DeBlur (яркость от 1x_DeBLR, цвет от SCUNet).
+Aggressive = RealPLKSR (прямой + инвертированный, 50/50) + RealESRGAN x2 и обратно (прямой + инвертированный).
+Итог       = Delicate ⟷ Aggressive, затем Strength (смешивание с исходником). Все смешивания 8-битные, как LayerStyle.
+
+Ползунки (процент = доля правой стороны):
+  strength                  — 0 исходник … 100 полное шумоподавление
+  delicate_aggressive       — Delicate ⟷ Aggressive
+  delicate_gan_psnr         — внутри Delicate: SCUNet GAN ⟷ SCUNet PSNR
+  aggressive_plksr_esrgan   — внутри Aggressive: RealPLKSR ⟷ RealESRGAN
+  esrgan_inverted_direct    — RealESRGAN: инверсия ⟷ прямой проход
+Ветки с нулевым весом не считаются. Результаты веток кэшируются для последнего изображения:
+смена ползунков, strength или deblur пересчитывается за секунды.
+
+Особенности моделей:
+  - SCUNet плохо работает на однотонных тёмных поверхностях.
+    Подсказка: увеличьте delicate_aggressive (больше Aggressive).
+  - 1xDeNoise_realplksr_otf местами съедает мелкую текстуру.
+    Подсказка: уменьшите delicate_aggressive или увеличьте aggressive_plksr_esrgan.
+  - RealESRGAN местами съедает мелкую текстуру и часто даёт резкость там, где она не нужна.
+    Подсказка: уменьшите aggressive_plksr_esrgan или delicate_aggressive.
+  - 1x_DeBLR может давать артефакты на однотонных поверхностях.
+    Подсказка: выключите deblur.
+
+Выходы: image, delicate, aggressive (чёрные, если вес группы 0), info, stat.
+Модели: ComfyUI/models/upscale_models, при первом запуске скачиваются с huggingface.co/Rennart."""
 
 
 class RennartDenoise:
