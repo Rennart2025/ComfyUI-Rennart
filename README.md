@@ -261,6 +261,12 @@ Outputs
 - `info` — short instruction (connect to Show Text / Show Any).
 - `stat` — which branches were computed, which came from the cache, time per branch and total.
 
+Notes on models
+- SCUNet works poorly on flat dark surfaces. Tip: raise `delicate_aggressive` (more Aggressive).
+- 1xDeNoise_realplksr_otf can eat fine texture in places. Tip: lower `delicate_aggressive` or raise `aggressive_plksr_esrgan`.
+- RealESRGAN can eat fine texture in places and often adds sharpness where it is not needed. Tip: lower `aggressive_plksr_esrgan` or `delicate_aggressive`.
+- 1x_DeBLR may produce artifacts on flat surfaces. Tip: turn `deblur` off.
+
 | Model | Author | License |
 |---|---|---|
 | `scunet_color_real_psnr.pth`, `scunet_color_real_gan.pth` | Kai Zhang et al. ([KAIR](https://github.com/cszn/KAIR)) | MIT |
@@ -304,6 +310,12 @@ Category: Rennart/Image
 - `info` — краткая инструкция (подключается к Show Text / Show Any).
 - `stat` — какие ветки посчитаны, какие взяты из кэша, время каждой ветки и общее.
 
+Особенности моделей
+- SCUNet плохо работает на однотонных тёмных поверхностях. Подсказка: увеличьте `delicate_aggressive` (больше Aggressive).
+- 1xDeNoise_realplksr_otf местами съедает мелкую текстуру. Подсказка: уменьшите `delicate_aggressive` или увеличьте `aggressive_plksr_esrgan`.
+- RealESRGAN местами съедает мелкую текстуру и часто даёт резкость там, где она не нужна. Подсказка: уменьшите `aggressive_plksr_esrgan` или `delicate_aggressive`.
+- 1x_DeBLR может давать артефакты на однотонных поверхностях. Подсказка: выключите `deblur`.
+
 | Модель | Автор | Лицензия |
 |---|---|---|
 | `scunet_color_real_psnr.pth`, `scunet_color_real_gan.pth` | Kai Zhang и др. ([KAIR](https://github.com/cszn/KAIR)) | MIT |
@@ -316,6 +328,7 @@ Category: Rennart/Image
 Категория: Rennart/Image
 
 </details>
+
 
 
 <details>
