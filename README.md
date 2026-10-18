@@ -20,7 +20,10 @@ Rennart_Video_Crossfade<br>
 
 ## How To Use
 
-## 🎨 Rennart Art Color Wheel (Beta-version)
+<details>
+<summary>🎨 Rennart Art Color Wheel </summary>
+  
+## 🎨 Rennart Art Color Wheel
 
 An interactive color-wheel node built around a real artistic (RYB) hue wheel — the same "red opposite green" wheel painters use, not a plain HSB circle. Instead of picking one color and computing a palette, you work directly with color markers locked onto harmony rays right on the node.
 
@@ -42,6 +45,8 @@ Pro Tip: drag any secondary marker's brightness independently and the node autom
 
 Лайфхак: двигая brightness любого вторичного маркера независимо от остальных, нода сама переключается в режим Custom — можно точечно нарушить правила гармонии для одного цвета, не теряя всю остальную настройку.
 <img width="897" height="1227" alt="2026-09-08_05-58-35" src="https://github.com/user-attachments/assets/66e50d83-5ab7-4f40-8487-a4b1dabc80a3" />
+
+</details>
 
 <details>
 <summary>🎨 Rennart Palette Extractor </summary>
@@ -109,6 +114,8 @@ Category: Rennart/Color
 Категория: Rennart/Color
 
 </details>
+
+
 <details>
 <summary>🎨 Rennart Color Preview </summary>
   
