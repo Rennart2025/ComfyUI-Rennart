@@ -5,8 +5,11 @@ Rennart nodes for Comfyui
 """
 
 # ==============================================
-# Rennart RGBA to RGB (отбрасывает альфа-канал)
+# Rennart RGBA to RGB (отбрасывает альфа-канал + отдаёт альфу отдельно)
 # ==============================================
+
+import torch
+
 
 class RennartRGBAToRGB:
     @classmethod
@@ -18,29 +21,39 @@ class RennartRGBAToRGB:
         }
 
     CATEGORY = "Rennart/Image"
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("image",)
+    RETURN_TYPES = ("IMAGE", "MASK")
+    RETURN_NAMES = ("image", "image_alpha")
     FUNCTION = "convert"
 
     def convert(self, image):
         channels = image.shape[-1]
+        B, H, W = image.shape[0], image.shape[1], image.shape[2]
 
         if channels == 3:
-            return (image,)
+            # Уже RGB — пропускаем, альфа = полностью непрозрачная
+            rgb = image
+            alpha = torch.ones((B, H, W), dtype=image.dtype, device=image.device)
 
-        if channels == 4:
-            rgb_image = image[..., :3]
-            return (rgb_image,)
+        elif channels == 4:
+            # Отбрасываем альфа-канал, но возвращаем его как MASK
+            rgb = image[..., :3]
+            alpha = image[..., 3]
 
-        if channels == 1:
-            rgb_image = image.repeat(1, 1, 1, 3)
-            return (rgb_image,)
+        elif channels == 1:
+            # Grayscale → RGB (дублируем канал), альфа = полностью непрозрачная
+            rgb = image.repeat(1, 1, 1, 3)
+            alpha = torch.ones((B, H, W), dtype=image.dtype, device=image.device)
 
-        if channels > 4:
-            rgb_image = image[..., :3]
-            return (rgb_image,)
+        else:
+            # Нестандартное число каналов: берём первые 3 как RGB,
+            # альфа — 4-й канал, если он есть, иначе полностью непрозрачная
+            rgb = image[..., :3]
+            if channels > 3:
+                alpha = image[..., 3]
+            else:
+                alpha = torch.ones((B, H, W), dtype=image.dtype, device=image.device)
 
-        return (image,)
+        return (rgb, alpha)
 
 
 # ==============================================
