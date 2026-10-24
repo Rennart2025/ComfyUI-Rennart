@@ -57,7 +57,6 @@ def _pad_mask(mask, pad_left, pad_right, pad_top, pad_bottom, mode):
     m = mask.unsqueeze(1)  # [B, 1, H, W]
     try:
         if mode == "constant":
-            # constant для маски: 1.0 — чтобы режим "not masked" давал непрозрачный паддинг
             return torch.nn.functional.pad(
                 m, (pad_left, pad_right, pad_top, pad_bottom),
                 mode="constant", value=1.0
@@ -121,8 +120,9 @@ class RennartImagePad:
             "optional": {
                 "mask": ("MASK", {
                     "tooltip": (
-                        "Входящая альфа/маска прозрачности оригинала.\n"
-                        "Если не подана — используется альфа-канал изображения (если RGBA),\n"
+                        "Маска в формате ComfyUI MASK (1 = прозрачное, 0 = объект),\n"
+                        "как выход LoadImage. Нода инвертирует её в альфа-канал.\n"
+                        "Если не подана — берётся альфа-канал из RGBA-изображения (если он есть),\n"
                         "иначе всё изображение считается непрозрачным."
                     )
                 }),
@@ -132,10 +132,7 @@ class RennartImagePad:
                 }),
                 "feathering": ("INT", {
                     "default": 0, "min": 0, "max": 512, "step": 1,
-                    "tooltip": (
-                        "Радиус растушёвки границы паддинга.\n"
-                        "0 = резкая граница."
-                    )
+                    "tooltip": "Радиус растушёвки границы паддинга. 0 = резкая граница."
                 }),
             },
         }
@@ -207,27 +204,29 @@ class RennartImagePad:
             pm = torch.nn.functional.avg_pool2d(pm, kernel_size=f * 2 + 1, stride=1)
             pad_mask = pm.squeeze(1)
 
-        # --- Входящая альфа ---
+        # --- Входящая альфа (1 = непрозрачное) ---
         if mask is not None:
-            input_alpha = mask.to(image.device, dtype=image.dtype)
-            if input_alpha.ndim == 4:
-                input_alpha = input_alpha.squeeze(-1)
-            # Проверка размера
-            if input_alpha.shape[1] != H or input_alpha.shape[2] != W:
+            m = mask.to(image.device, dtype=image.dtype)
+            if m.ndim == 4:
+                m = m.squeeze(-1)
+            if m.shape[1] != H or m.shape[2] != W:
                 raise ValueError(
-                    f"[Rennart] Размер маски {input_alpha.shape[1:]} не совпадает с изображением {(H, W)}."
+                    f"[Rennart] Размер маски {tuple(m.shape[1:])} не совпадает с изображением {(H, W)}."
                 )
-            # Проверка батча
-            if input_alpha.shape[0] != B:
-                if input_alpha.shape[0] == 1:
-                    input_alpha = input_alpha.expand(B, -1, -1)
+            if m.shape[0] != B:
+                if m.shape[0] == 1:
+                    m = m.expand(B, -1, -1)
                 else:
                     raise ValueError(
-                        f"[Rennart] Батч маски ({input_alpha.shape[0]}) не совпадает с батчем изображения ({B})."
+                        f"[Rennart] Батч маски ({m.shape[0]}) не совпадает с батчем изображения ({B})."
                     )
+            # ВАЖНО: ComfyUI MASK = 1 - alpha, инвертируем в альфу
+            input_alpha = 1.0 - m
         elif C >= 4:
+            # Альфа уже в изображении, не инвертируем
             input_alpha = image[..., 3].to(image.device, dtype=image.dtype)
         else:
+            # Нет данных о прозрачности — всё непрозрачное
             input_alpha = torch.ones((B, H, W), dtype=image.dtype, device=image.device)
 
         # --- Паддинг входящей альфы ---
@@ -247,7 +246,10 @@ class RennartImagePad:
         # --- Собираем RGBA ---
         rgba = torch.cat([padded_rgb, output_alpha.unsqueeze(-1)], dim=-1)
 
-        return (rgba, pad_mask, W2, H2)
+        # --- Выходная маска в семантике ComfyUI: 1 = прозрачное ---
+        output_mask = 1.0 - output_alpha
+
+        return (rgba, output_mask, W2, H2)
 
 
 # ==============================================
