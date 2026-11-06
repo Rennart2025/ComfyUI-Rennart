@@ -317,6 +317,54 @@ Category: Rennart/Image
 </details>
 
 
+<details>
+<summary> 🖼️ Rennart Image Pad </summary>
+
+## 🖼️ Rennart Image Pad
+
+Нода **Rennart Image Pad** добавляет паддинг к изображению так, чтобы его ширина и высота стали кратны заданному числу (например, 8, 16, 32, 64). Поддерживает разные режимы заполнения (`constant`, `edge`, `reflect`, `symmetric`), управляемое расположение изображения внутри нового холста (`center`, углы) и опциональную растушёвку границы. Нода корректно работает с прозрачностью: учитывает входную маску ComfyUI, альфа-канал из RGBA-изображения или считает изображение полностью непрозрачным. На выходе возвращает RGBA-изображение, маску в семантике ComfyUI (1 = прозрачное), а также новые ширину и высоту.
+
+**Входы:**
+- `image` (IMAGE) — входное изображение (батч).
+- `multiple` (INT) — кратность, до которой размеры округляются вверх (1–512), по умолчанию `32`. Пример: сторона 1648 при `multiple=32` → 1664.
+- `pad_mode` — режим заполнения паддинга: `constant` (сплошной цвет), `edge` (наращивание краевых пикселей), `reflect` (зеркальное отражение без повтора края), `symmetric` (зеркальное отражение с повтором края). По умолчанию `edge`.
+- `resize_position` — распределение паддинга вокруг изображения: `center` (поровну), `top-left` (паддинг справа и снизу), `top-right` (слева и снизу), `bottom-left` (справа и сверху), `bottom-right` (слева и сверху). По умолчанию `center`.
+- `masking` — режим прозрачности паддинга: `masked` (паддинг прозрачный, alpha=0) или `not masked` (паддинг непрозрачный, alpha=1). По умолчанию `masked`.
+- `mask` (MASK, опционально) — маска в формате ComfyUI MASK (1 = прозрачное, 0 = объект), как выход LoadImage; нода инвертирует её в альфа-канал. Если не подана — берётся альфа-канал из RGBA-изображения (если есть), иначе всё изображение считается непрозрачным.
+- `background_color` (опционально) — цвет фона: `white`, `black`, `gray`, `red`, `green`, `blue`, `yellow`, `cyan`, `magenta`, `orange`, `transparent`. По умолчанию `gray`. Используется только при `pad_mode = constant`.
+- `feathering` (INT, опционально) — радиус растушёвки границы паддинга (0–512), по умолчанию `0` (резкая граница).
+
+**Выходы:**
+- `image` (IMAGE) — изображение с паддингом в формате RGBA.
+- `mask` (MASK) — маска в семантике ComfyUI (1 = прозрачное).
+- `width` (INT) — новая ширина после паддинга.
+- `height` (INT) — новая высота после паддинга.
+
+**Категория:** `Rennart/Image`
+
+---
+
+The **Rennart Image Pad** node pads an image so that its width and height become multiples of a given number (e.g. 8, 16, 32, 64). It supports different fill modes (`constant`, `edge`, `reflect`, `symmetric`), controllable image placement inside the new canvas (`center`, corners), and optional edge feathering. The node correctly handles transparency: it uses an input ComfyUI mask, an alpha channel from an RGBA image, or treats the image as fully opaque. It outputs an RGBA image, a mask in ComfyUI semantics (1 = transparent), and the new width and height.
+
+**Inputs:**
+- `image` (IMAGE) — input image (batch).
+- `multiple` (INT) — multiple to round dimensions up to (1–512), default `32`. Example: a side of 1648 with `multiple=32` → 1664.
+- `pad_mode` — padding fill mode: `constant` (solid color), `edge` (replicate edge pixels), `reflect` (mirror reflection without repeating the edge), `symmetric` (mirror reflection with repeated edge). Default `edge`.
+- `resize_position` — padding distribution around the image: `center` (evenly), `top-left` (padding right and bottom), `top-right` (left and bottom), `bottom-left` (right and top), `bottom-right` (left and top). Default `center`.
+- `masking` — padding transparency mode: `masked` (transparent padding, alpha=0) or `not masked` (opaque padding, alpha=1). Default `masked`.
+- `mask` (MASK, optional) — mask in ComfyUI MASK format (1 = transparent, 0 = object), as output by LoadImage; the node inverts it into an alpha channel. If not provided, the alpha channel of an RGBA image is used (if present), otherwise the whole image is treated as opaque.
+- `background_color` (optional) — background color: `white`, `black`, `gray`, `red`, `green`, `blue`, `yellow`, `cyan`, `magenta`, `orange`, `transparent`. Default `gray`. Used only when `pad_mode = constant`.
+- `feathering` (INT, optional) — feather radius of the padding border (0–512), default `0` (sharp border).
+
+**Outputs:**
+- `image` (IMAGE) — padded image in RGBA format.
+- `mask` (MASK) — mask in ComfyUI semantics (1 = transparent).
+- `width` (INT) — new width after padding.
+- `height` (INT) — new height after padding.
+
+**Category:** `Rennart/Image`
+</details>
+
 
 <details>
 <summary> 🔄 Rennart Offset Image </summary>
