@@ -365,6 +365,56 @@ The **Rennart Image Pad** node pads an image so that its width and height become
 **Category:** `Rennart/Image`
 </details>
 
+<details>
+<summary> 📝 Rennart Image Text Captions </summary>
+
+## 📝 Rennart Image Text Captions
+
+Нода **Rennart Image Text Captions** ресайзит изображение (по большей оси с сохранением пропорций или точным растяжением до заданного размера) и добавляет сверху и/или снизу цветные полосы с текстом. Длинный текст автоматически переносится по строкам, выравнивается по центру, левому или правому краю. Если на вход подано RGBA-изображение, альфа-канал заменяется заливкой `background_color`. Все изображения в батче после ресайза должны получиться одинакового размера — иначе нода выдаст ошибку.
+
+**Входы:**
+- `image` (IMAGE) — входное изображение (батч).
+- `target_width` (INT) — габарит по ширине (1–8192), по умолчанию `1024`. При `keep_aspect_ratio=True` не превышается.
+- `target_height` (INT) — габарит по высоте (1–8192), по умолчанию `1024`. При `keep_aspect_ratio=True` не превышается.
+- `keep_aspect_ratio` (BOOLEAN) — `Keep` (по умолчанию): fit по большей оси с сохранением пропорций; `Stretch`: точный ресайз до `target_width × target_height` с искажением.
+- `resize_if_smaller` (BOOLEAN) — `Keep size` (по умолчанию): не увеличивать изображение, если оно меньше target; `Upscale`: увеличивать до target.
+- `interpolation` — метод интерполяции: `nearest`, `bilinear`, `bicubic`, `lanczos` (по умолчанию `lanczos`).
+- `text_above` (STRING) — текст над изображением. Пусто → полоса не добавляется. Длинный текст переносится по строкам.
+- `text_under` (STRING) — текст под изображением. Пусто → полоса не добавляется. Длинный текст переносится по строкам.
+- `text_height` (INT) — размер шрифта в пикселях (1–200), по умолчанию `12`. Высота полосы = отступ + N_строк × text_height + отступ (отступы по text_height/2).
+- `text_align` — выравнивание текста: `center` (по умолчанию), `left`, `right`.
+- `text_color` (INT) — цвет текста в формате RGB-int (0x000000–0xFFFFFF), по умолчанию `0x000000`.
+- `background_color` (INT) — цвет фона полос и заливки RGBA (0x000000–0xFFFFFF), по умолчанию `0xFFFFFF`.
+
+**Выходы:**
+- `image` (IMAGE) — изображение с полосами текста сверху и/или снизу.
+
+**Категория:** `Rennart/Image`
+
+---
+
+The **Rennart Image Text Captions** node resizes an image (fit by the longer axis with preserved aspect ratio, or exact stretch to a target size) and adds colored strips with text above and/or below it. Long text is automatically word-wrapped and aligned to the center, left, or right. If an RGBA image is provided, its alpha channel is replaced by the `background_color` fill. All images in the batch must end up with the same size after resizing — otherwise the node raises an error.
+
+**Inputs:**
+- `image` (IMAGE) — input image (batch).
+- `target_width` (INT) — width bound (1–8192), default `1024`. Not exceeded when `keep_aspect_ratio=True`.
+- `target_height` (INT) — height bound (1–8192), default `1024`. Not exceeded when `keep_aspect_ratio=True`.
+- `keep_aspect_ratio` (BOOLEAN) — `Keep` (default): fit by the longer axis with preserved aspect ratio; `Stretch`: exact resize to `target_width × target_height` with distortion.
+- `resize_if_smaller` (BOOLEAN) — `Keep size` (default): do not upscale if the image is smaller than target; `Upscale`: upscale to target.
+- `interpolation` — interpolation method: `nearest`, `bilinear`, `bicubic`, `lanczos` (default `lanczos`).
+- `text_above` (STRING) — text above the image. Empty → no strip is added. Long text is word-wrapped.
+- `text_under` (STRING) — text below the image. Empty → no strip is added. Long text is word-wrapped.
+- `text_height` (INT) — font size in pixels (1–200), default `12`. Strip height = padding + N_lines × text_height + padding (paddings are text_height/2).
+- `text_align` — text alignment: `center` (default), `left`, `right`.
+- `text_color` (INT) — text color as an RGB-int (0x000000–0xFFFFFF), default `0x000000`.
+- `background_color` (INT) — background color for strips and RGBA fill (0x000000–0xFFFFFF), default `0xFFFFFF`.
+
+**Outputs:**
+- `image` (IMAGE) — image with text strips above and/or below.
+
+**Category:** `Rennart/Image`
+</details>
+
 
 <details>
 <summary> 🔄 Rennart Offset Image </summary>
