@@ -316,6 +316,46 @@ Category: Rennart/Image
 
 </details>
 
+<details>
+<summary> 🧵 Rennart Face Stitch </summary>
+
+## 🧵 Rennart Face Stitch
+
+Нода **Rennart Face Stitch** вклеивает обработанный кроп лица обратно в оригинальное изображение по координатам bbox (например, из AGSoft Crop Face). Кроп автоматически ресайзится до размера bbox, так что размеры можно не согласовывать вручную. Доступны три режима вклейки: жёсткая вставка `paste`, плавный шов по краям окна `feather_blend` и сохраняющий освещение `poisson_blend` (через cv2.seamlessClone, требует opencv). Если подать овальную маску лица (например, из AGSoft Crop Face), вклейка идёт строго по ней: 1 — вклеить, 0 — оставить оригинал.
+
+**Входы:**
+- `original_image` (IMAGE) — оригинал, куда вклеивается лицо (берётся первый кадр батча).
+- `cropped_image` (IMAGE) — обработанный кроп лица; при несовпадении размеров автоматически ресайзится под bbox.
+- `bbox` (BBOX) — список координат `(x, y, w, h)`, например из AGSoft Crop Face.
+- `bbox_index` (INT) — какой bbox из списка использовать (0 — первый), по умолчанию `0`.
+- `blend_mode` — режим вклейки: `paste` (жёсткая вставка), `feather_blend` (плавный шов по краям окна, по умолчанию), `poisson_blend` (сохранение освещения; нужен opencv, при его отсутствии режим недоступен).
+- `feathering` (INT) — ширина плавного шва для `feather_blend` (0–128), по умолчанию `16`.
+- `face_mask` (MASK, опционально) — овал лица (1 — вклеить, 0 — оставить оригинал); автоматически ресайзится до размера bbox.
+
+**Выходы:**
+- `image` (IMAGE) — изображение с вклеенным лицом.
+
+**Категория:** `Rennart/Image`
+
+---
+
+The **Rennart Face Stitch** node pastes a processed face crop back into the original image at the given bbox coordinates (e.g. from AGSoft Crop Face). The crop is automatically resized to the bbox size, so no manual size matching is needed. Three blend modes are available: hard `paste`, smooth-edged `feather_blend`, and lighting-preserving `poisson_blend` (via cv2.seamlessClone, requires opencv). If a face oval mask is provided (e.g. from AGSoft Crop Face), the stitch strictly follows it: 1 — paste, 0 — keep the original.
+
+**Inputs:**
+- `original_image` (IMAGE) — the original image to paste the face into (first batch frame is used).
+- `cropped_image` (IMAGE) — the processed face crop; automatically resized to the bbox size if dimensions differ.
+- `bbox` (BBOX) — list of `(x, y, w, h)` coordinates, e.g. from AGSoft Crop Face.
+- `bbox_index` (INT) — which bbox from the list to use (0 — first), default `0`.
+- `blend_mode` — blend mode: `paste` (hard paste), `feather_blend` (smooth edge seam, default), `poisson_blend` (lighting-preserving; requires opencv, unavailable otherwise).
+- `feathering` (INT) — seam width for `feather_blend` (0–128), default `16`.
+- `face_mask` (MASK, optional) — face oval mask (1 — paste, 0 — keep original); automatically resized to the bbox size.
+
+**Outputs:**
+- `image` (IMAGE) — the image with the stitched face.
+
+**Category:** `Rennart/Image`
+</details>
+
 
 <details>
 <summary> 🖼️ Rennart Image Pad </summary>
