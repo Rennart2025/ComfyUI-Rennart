@@ -1,2 +1,5 @@
 torch
 numpy
+
+# opencv-python: poisson_blend в Rennart Face Stitch / poisson_blend в Rennart Face Stitch
+opencv-python>=4.7.0.72
