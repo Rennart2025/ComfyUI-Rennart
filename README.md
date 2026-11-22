@@ -531,6 +531,114 @@ The **Rennart Image Upscale (Model)** node combines upscale model loading and im
 </details>
 
 <details>
+<summary> 🎨 Generate Gradient (Rennart) </summary>
+
+## 🎨 Generate Gradient (Rennart)
+
+The **Generate Gradient (Rennart)** node generates a smooth gradient image from a list of color stops. Four direction modes are available: `horizontal` (left to right), `vertical` (top to bottom), `radial_corner` (from the center toward the farthest corner) and `radial_edge` (from the center toward the nearest edge — an inscribed circle). For radial modes the center can be moved anywhere in the frame. An optional `tolerance` parameter quantizes the color channels, producing a banding (posterization) effect on top of the smooth gradient.
+
+**Inputs:**
+- `width` (INT) — image width in pixels (64–4096), default `512`.
+- `height` (INT) — image height in pixels (64–4096), default `512`.
+- `direction` — gradient type: `horizontal`, `vertical`, `radial_corner` (center to farthest corner), `radial_edge` (center to nearest edge, inscribed circle).
+- `tolerance` (INT) — channel quantization (banding), works in all modes (0–255), default `0` — no quantization.
+- `gradient_stops` (STRING, multiline) — color stops, one per line in the format `position:R,G,B` (position 0–100), e.g. `0:255,0,0`. Areas before the first and after the last stop are filled with the edge colors.
+- `radial_center_x` (FLOAT) — X of the radial gradient center (fraction of width, 0.0–1.0), default `0.5`. Used only in `radial_*` modes.
+- `radial_center_y` (FLOAT) — Y of the radial gradient center (fraction of height, 0.0–1.0), default `0.5`. Used only in `radial_*` modes.
+
+**Outputs:**
+- `image` (IMAGE) — the generated gradient image.
+
+**Category:** `Rennart/Image`
+
+---
+
+Нода **Generate Gradient (Rennart)** генерирует плавный градиент по списку цветовых остановок. Доступны четыре режима направления: `horizontal` (слева направо), `vertical` (сверху вниз), `radial_corner` (от центра к самому дальнему углу) и `radial_edge` (от центра к ближайшей границе — вписанный круг). В радиальных режимах центр можно смещать в любую точку кадра. Опциональный параметр `tolerance` огрубляет цветовые каналы, давая эффект бандинга (постеризации) поверх плавного градиента.
+
+**Входы:**
+- `width` (INT) — ширина изображения в пикселях (64–4096), по умолчанию `512`.
+- `height` (INT) — высота изображения в пикселях (64–4096), по умолчанию `512`.
+- `direction` — тип градиента: `horizontal`, `vertical`, `radial_corner` (от центра к дальнему углу), `radial_edge` (от центра к ближайшей границе, вписанный круг).
+- `tolerance` (INT) — огрубление каналов (бандинг), работает во всех режимах (0–255), по умолчанию `0` — без огрубления.
+- `gradient_stops` (STRING, многострочный) — цветовые остановки, по одной на строку в формате `позиция:R,G,B` (позиция 0–100), например `0:255,0,0`. Области до первой и после последней остановки заливаются крайними цветами.
+- `radial_center_x` (FLOAT) — X центра радиального градиента (доля ширины, 0.0–1.0), по умолчанию `0.5`. Используется только в режимах `radial_*`.
+- `radial_center_y` (FLOAT) — Y центра радиального градиента (доля высоты, 0.0–1.0), по умолчанию `0.5`. Используется только в режимах `radial_*`.
+
+**Выходы:**
+- `image` (IMAGE) — сгенерированное изображение градиента.
+
+**Категория:** `Rennart/Image`
+</details>
+
+<details>
+<summary> 🎨 Generate Posterize Gradient (Rennart) </summary>
+
+## 🎨 Generate Posterize Gradient (Rennart)
+
+The **Generate Posterize Gradient (Rennart)** node generates a stepped (posterized) gradient image from a list of color stops: between two stops the color stays flat and switches abruptly at the next stop — no interpolation. Four direction modes are available: `horizontal` (left to right), `vertical` (top to bottom), `radial_corner` (from the center toward the farthest corner) and `radial_edge` (from the center toward the nearest edge — an inscribed circle). For radial modes the center can be moved anywhere in the frame.
+
+**Inputs:**
+- `width` (INT) — image width in pixels (64–4096), default `512`.
+- `height` (INT) — image height in pixels (64–4096), default `512`.
+- `direction` — gradient type: `horizontal`, `vertical`, `radial_corner` (center to farthest corner), `radial_edge` (center to nearest edge, inscribed circle).
+- `gradient_stops` (STRING, multiline) — color stops, one per line in the format `position:R,G,B` (position 0–100), e.g. `0:0,0,0`. Each interval keeps the color of its starting stop; the area past the last stop is filled with the last color.
+- `radial_center_x` (FLOAT) — X of the radial gradient center (fraction of width, 0.0–1.0), default `0.5`. Used only in `radial_*` modes.
+- `radial_center_y` (FLOAT) — Y of the radial gradient center (fraction of height, 0.0–1.0), default `0.5`. Used only in `radial_*` modes.
+
+**Outputs:**
+- `image` (IMAGE) — the generated stepped gradient image.
+
+**Category:** `Rennart/Image`
+
+---
+
+Нода **Generate Posterize Gradient (Rennart)** генерирует ступенчатый (постеризованный) градиент по списку цветовых остановок: между двумя остановками цвет остаётся постоянным и резко переключается на следующей — без интерполяции. Доступны четыре режима направления: `horizontal` (слева направо), `vertical` (сверху вниз), `radial_corner` (от центра к самому дальнему углу) и `radial_edge` (от центра к ближайшей границе — вписанный круг). В радиальных режимах центр можно смещать в любую точку кадра.
+
+**Входы:**
+- `width` (INT) — ширина изображения в пикселях (64–4096), по умолчанию `512`.
+- `height` (INT) — высота изображения в пикселях (64–4096), по умолчанию `512`.
+- `direction` — тип градиента: `horizontal`, `vertical`, `radial_corner` (от центра к дальнему углу), `radial_edge` (от центра к ближайшей границе, вписанный круг).
+- `gradient_stops` (STRING, многострочный) — цветовые остановки, по одной на строку в формате `позиция:R,G,B` (позиция 0–100), например `0:0,0,0`. Каждый интервал держит цвет своей начальной остановки; область за последней остановкой заливается последним цветом.
+- `radial_center_x` (FLOAT) — X центра радиального градиента (доля ширины, 0.0–1.0), по умолчанию `0.5`. Используется только в режимах `radial_*`.
+- `radial_center_y` (FLOAT) — Y центра радиального градиента (доля высоты, 0.0–1.0), по умолчанию `0.5`. Используется только в режимах `radial_*`.
+
+**Выходы:**
+- `image` (IMAGE) — сгенерированное изображение ступенчатого градиента.
+
+**Категория:** `Rennart/Image`
+</details>
+
+<details>
+<summary> 🧩 Rennart Blend Images Multi </summary>
+
+## 🧩 Rennart Blend Images Multi
+
+The **Rennart Blend Images Multi** node sequentially blends up to 6 images with a chosen blend mode, in the order `image_1 ⊕ image_2 ⊕ image_3 ⊕ ...`. Four modes are available: `multiply` (a × b), `screen` (1 − (1−a)(1−b)), `darken` (min) and `lighten` (max). All images are automatically conformed to the first input: resized to its dimensions (lanczos), batches are matched (a single frame expands, otherwise trimmed to the smallest batch), and extra channels are dropped to the common minimum. If only one image is connected, it passes through unchanged; if none — the node raises an error.
+
+**Inputs:**
+- `blend_mode` — blend mode applied sequentially to all connected images: `multiply` (default), `screen`, `darken`, `lighten`.
+- `image_1` … `image_6` (IMAGE, optional) — images to blend. All sizes are conformed to `image_1`; at least one must be connected, blending requires two or more.
+
+**Outputs:**
+- `image` (IMAGE) — the blended image (clamped to 0–1).
+
+**Category:** `Rennart/Image`
+
+---
+
+Нода **Rennart Blend Images Multi** последовательно смешивает до 6 изображений выбранным режимом наложения в порядке `image_1 ⊕ image_2 ⊕ image_3 ⊕ ...`. Доступны четыре режима: `multiply` (a × b), `screen` (1 − (1−a)(1−b)), `darken` (min) и `lighten` (max). Все изображения автоматически приводятся к первому входу: ресайзятся под его размер (lanczos), батчи выравниваются (одиночный кадр расширяется, иначе всё обрезается до минимального батча), а лишние каналы отбрасываются до общего минимума. Если подключено одно изображение — оно проходит насквозь без изменений; если ни одного — нода выдаёт ошибку.
+
+**Входы:**
+- `blend_mode` — режим наложения, применяется последовательно ко всем подключённым изображениям: `multiply` (по умолчанию), `screen`, `darken`, `lighten`.
+- `image_1` … `image_6` (IMAGE, опциональные) — изображения для смешивания. Все размеры приводятся к `image_1`; должно быть подключено минимум одно, для смешивания — два и более.
+
+**Выходы:**
+- `image` (IMAGE) — результат смешивания (клампится в 0–1).
+
+**Категория:** `Rennart/Image`
+</details>
+
+<details>
 <summary> 🎵 Rennart Audio Concatenate </summary>
 
 ## 🎵 Rennart Audio Concatenate
