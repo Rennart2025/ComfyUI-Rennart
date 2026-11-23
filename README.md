@@ -406,6 +406,72 @@ The **Rennart Image Pad** node pads an image so that its width and height become
 </details>
 
 <details>
+<summary> 🎛️ Rennart HSV Color Correction </summary>
+
+## 🎛️ Rennart HSV Color Correction
+
+Advanced global color correction in a single node: Hue, Saturation, Brightness and Contrast, applied in that order with a final clamp to the valid range.
+
+The main feature is the **saturation method** dropdown: saturation can be computed on four different bases, so you can pick how the node "perceives" brightness — from a classic HSV max-based value to Photoshop-like HSL lightness or perceptual video-standard luma (BT.601 / BT.709 / BT.2020). Different methods give visibly different results on dark and desaturated colors, which helps avoid unnatural artifacts during global grading.
+
+**Brightness** also has four modes, so the adjustment behaves the way you expect in different contexts:
+
+- `Exposure (Linear)` — RGB × coefficient; black stays black.
+- `Gamma (Midtones)` — pulls midtones up or down without touching pure black/white; negative values brighten, positive darken.
+- `Offset (Additive)` — RGB + constant; black becomes gray.
+- `HSL Lightness (Classic)` — adjusts the L channel only; colors shift toward white.
+
+**Inputs**
+
+- `image` (IMAGE) — input image (batch supported).
+- `hue` (FLOAT) — hue rotation in degrees (−180…180), default `0.0`.
+- `saturation` (FLOAT) — saturation change in percent (−100…100), default `0.0`.
+- `saturation_method` — how saturation is computed: `HSV (Max-Based Brightness)`, `HSL (Average Lightness)` (default), `BT.601 (SDTV)`, `BT.709 (sRGB/HDTV)`, `BT.2020 (HDR/Wide Gamut)`.
+- `brightness` (FLOAT) — brightness change in percent (−100…100), default `0.0`.
+- `brightness_mode` — adjustment model: `Exposure (Linear)` (default), `Gamma (Midtones)`, `Offset (Additive)`, `HSL Lightness (Classic)`.
+- `contrast` (FLOAT) — contrast change in percent (−100…100), default `0.0`.
+
+**Outputs**
+
+- `image` (IMAGE) — corrected image.
+- `info` (STRING) — short multi-line description of the node and its methods (connect to Show Text / Show Any).
+
+Category: Rennart/Image
+
+---
+
+Продвинутая глобальная цветокоррекция в одной ноде: Тон (Hue), Насыщенность (Saturation), Яркость (Brightness) и Контраст (Contrast), применяемые последовательно с финальным клипом в допустимый диапазон.
+
+Главная особенность — выпадающий список **метода насыщенности**: насыщенность можно считать на четырёх разных основах, выбирая, как нода «воспринимает» яркость — от классического HSV-значения по максимуму каналов до светимости HSL, как в Photoshop, или перцептивной яркости видео-стандартов (BT.601 / BT.709 / BT.2020). Методы заметно по-разному обрабатывают тёмные и малонасыщенные цвета — это помогает избежать неестественных артефактов при глобальной цветокоррекции.
+
+**Яркость** тоже имеет четыре режима, чтобы настройка вела себя так, как вы ожидаете в разных задачах:
+
+- `Exposure (Linear)` — RGB × коэффициент; чёрный остаётся чёрным.
+- `Gamma (Midtones)` — «тянет» средние тона, не трогая чистый чёрный/белый; отрицательные значения осветляют, положительные затемняют.
+- `Offset (Additive)` — RGB + константа; чёрный становится серым.
+- `HSL Lightness (Classic)` — меняется только канал L; цвета уходят в белый.
+
+**Входы**
+
+- `image` (IMAGE) — входное изображение (батч поддерживается).
+- `hue` (FLOAT) — поворот тона в градусах (−180…180), по умолчанию `0.0`.
+- `saturation` (FLOAT) — изменение насыщенности в процентах (−100…100), по умолчанию `0.0`.
+- `saturation_method` — способ расчёта насыщенности: `HSV (Max-Based Brightness)`, `HSL (Average Lightness)` (по умолчанию), `BT.601 (SDTV)`, `BT.709 (sRGB/HDTV)`, `BT.2020 (HDR/Wide Gamut)`.
+- `brightness` (FLOAT) — изменение яркости в процентах (−100…100), по умолчанию `0.0`.
+- `brightness_mode` — модель изменения яркости: `Exposure (Linear)` (по умолчанию), `Gamma (Midtones)`, `Offset (Additive)`, `HSL Lightness (Classic)`.
+- `contrast` (FLOAT) — изменение контраста в процентах (−100…100), по умолчанию `0.0`.
+
+**Выходы**
+
+- `image` (IMAGE) — скорректированное изображение.
+- `info` (STRING) — краткое многострочное описание ноды и её методов (подключается к Show Text / Show Any).
+
+Категория: Rennart/Image
+
+</details>
+
+
+<details>
 <summary> 📝 Rennart Image Text Captions </summary>
 
 ## 📝 Rennart Image Text Captions
