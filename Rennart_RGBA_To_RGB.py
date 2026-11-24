@@ -5,7 +5,9 @@ Rennart nodes for Comfyui
 """
 
 # ==============================================
-# Rennart RGBA to RGB (отбрасывает альфа-канал + отдаёт альфу отдельно)
+# Rennart Image to RGB
+# Принимает RGB / RGBA / Grayscale (1 канал),
+# отдаёт RGB + альфу отдельной MASK
 # ==============================================
 
 import torch
@@ -26,6 +28,11 @@ class RennartRGBAToRGB:
     FUNCTION = "convert"
 
     def convert(self, image):
+        # На случай входа без размерности канала [B, H, W] —
+        # трактуем как одноканальный Grayscale
+        if image.dim() == 3:
+            image = image.unsqueeze(-1)
+
         channels = image.shape[-1]
         B, H, W = image.shape[0], image.shape[1], image.shape[2]
 
@@ -65,5 +72,5 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "RennartRGBAToRGB": "🎨 Rennart RGBA to RGB",
+    "RennartRGBAToRGB": "🎨 Rennart Image to RGB",
 }
