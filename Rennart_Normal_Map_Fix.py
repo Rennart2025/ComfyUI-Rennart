@@ -1,7 +1,7 @@
 r"""
 Rennart nodes for ComfyUI
 Файл и путь: ComfyUI\custom_nodes\ComfyUI-Rennart\Rennart_Normal_Map_Fix.py
-Категория: Rennart/Image
+Категория: Rennart/Textures
 
 [RU] Утилита для исправления карт нормалей из разных источников.
 Переворачивает каналы R/G/B под конвенции DirectX и OpenGL (Marigold обычно
@@ -47,7 +47,7 @@ class RennartNormalMapFix:
     RETURN_TYPES = ("IMAGE",)
     RETURN_NAMES = ("normal_map",)
     FUNCTION = "process"
-    CATEGORY = "Rennart/Image"
+    CATEGORY = "Rennart/Textures"
 
     def process(self, normal_map, flip_red, flip_green, flip_blue,
                 strength, normalize):

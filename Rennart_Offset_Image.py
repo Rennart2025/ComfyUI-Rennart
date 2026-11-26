@@ -1,7 +1,7 @@
 """
 Rennart nodes for Comfyui
 Файл и путь: ComfyUI\custom_nodes\ComfyUI-Rennart\Rennart_Offset_Image.py
-Категория: Rennart/Image
+Категория: Rennart/Textures
 """
 
 # ==============================================
@@ -28,7 +28,7 @@ class RennartOffsetImage:
     RETURN_TYPES = ("IMAGE",)
     RETURN_NAMES = ("image",)
     FUNCTION = "run"
-    CATEGORY = "Rennart/Image"
+    CATEGORY = "Rennart/Textures"
 
     def run(self, pixels, offset_mode, x_percent, y_percent, x_pixels, y_pixels):
         n, y, x, c = pixels.size()
