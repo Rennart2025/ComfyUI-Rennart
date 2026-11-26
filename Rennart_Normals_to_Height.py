@@ -247,7 +247,7 @@ class RennartNormalsToHeight:
                                'texture (periodic FFT solver)'
                 }),
                 'detail': ('INT', {
-                    'default': 48, 'min': 8, 'max': 256, 'step': 1,
+                    'default': 48, 'min': 1, 'max': 256, 'step': 1,
                     'tooltip': 'Радиус фильтра в режиме relief (px на '
                                'рабочем разрешении): 32 — резкая деталь, '
                                '64-96 — мягче, больше средней формы / '
