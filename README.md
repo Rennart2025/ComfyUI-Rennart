@@ -1034,7 +1034,7 @@ Some nodes and utils in this package were copied, forked, refined or remastered 
 [ComfyUI-Ideogram-Palette-and-Prompt-Tools](https://github.com/SurrealByDesign/ComfyUI-Ideogram-Palette-and-Prompt-Tools)<br>
 
 Thanks to ComfyUI community for inspiration and support.<br>
-Special thanks to [OreX](https://github.com/orex2121) [Raykosan](https://github.com/Raykosan), [Art-xmaster](https://github.com/Art-xmaster) and [OreX](https://github.com/orex2121) for inspiration and support.<br>
+Special thanks to [OreX](https://github.com/orex2121), [Raykosan](https://github.com/Raykosan), [Art-xmaster](https://github.com/Art-xmaster) for inspiration and support.<br>
 If you like this node, don't forget to star on GitHub!  
 
 ## 📧 Contact
