@@ -1031,6 +1031,7 @@ MIT License. Use at your own risk without any warranties. See the [LICENSE](LICE
 ## ✌️ Thanks
 Some nodes and utils in this package were copied, forked, refined or remastered from:<br>
 [WAS Node Suite](https://github.com/WASasquatch/was-node-suite-comfyui/)<br>
+[ComfyUI_Comfyroll_CustomNodes](https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes)<br>
 [ComfyUI-Ideogram-Palette-and-Prompt-Tools](https://github.com/SurrealByDesign/ComfyUI-Ideogram-Palette-and-Prompt-Tools)<br>
 
 Thanks to ComfyUI community for inspiration and support.<br>
